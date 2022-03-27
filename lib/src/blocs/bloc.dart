@@ -6,6 +6,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:async';
+import '../globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Bloc extends Object with Validators{
 
@@ -25,13 +27,31 @@ class Bloc extends Object with Validators{
   Function(String) get changePassword => _password.sink.add;
 
 
-  submit() async{
+  Future<bool> submit() async{
     final validEmail = _email.value;
     final validPassword = _password.value;
     final response = await createAlbum(validEmail, validPassword);
     final ids = json.decode(response.body);
-    print("${ids['mensaje']}");
-    print('email is $validEmail and password is $validPassword');
+    if(validarRespuesta(ids)){
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('nombre', validEmail);
+      await prefs.setString('pass', validPassword);
+      return true;
+    }else{
+      return false;
+    }
+
+  }
+
+  Future<String?> getNombre() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? algo = await prefs.getString("nombre");
+    return algo;
+  }
+
+  void quitarNombre() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("nombre");
   }
 
   dispose(){
@@ -52,5 +72,7 @@ class Bloc extends Object with Validators{
       }),
     );
   }
+
+
 
 }

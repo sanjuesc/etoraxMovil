@@ -1,12 +1,12 @@
 import 'dart:async';
-
+import '../globals.dart' as globals;
 class Validators{
   final validateEmail = StreamTransformer<String, String>.fromHandlers(
     handleData: (email, sink){
-      if (email.contains('@')){
+      if (email.length>4){
         sink.add(email);
       }else{
-        sink.addError('Enter a valid email');
+        sink.addError('El usuario debe un mínimo de 4 caracteres');
       }
     },
   );
@@ -16,8 +16,17 @@ class Validators{
       if (password.length>4){
         sink.add(password);
       }else{
-        sink.addError('Password must be at least 5 characters');
+        sink.addError('La contraseña debe un mínimo de 4 caracteres');
       }
     },
   );
+
+  bool validarRespuesta(dynamic respuesta){
+    if (respuesta['status']==200){
+      globals.token=respuesta['data']['token'];
+    }
+    return respuesta['status']==200;
+
+  }
+
 }
