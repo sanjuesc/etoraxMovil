@@ -27,20 +27,20 @@ class Bloc extends Object with Validators{
   Function(String) get changePassword => _password.sink.add;
 
 
-  Future<bool> submit() async{
+  Future<bool> submit(bool guardarUsuPass) async{
     final validEmail = _email.value;
     final validPassword = _password.value;
     final response = await createAlbum(validEmail, validPassword);
     final ids = json.decode(response.body);
-    if(validarRespuesta(ids)){
+    if(guardarUsuPass){
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('nombre', validEmail);
       await prefs.setString('pass', validPassword);
-      return true;
     }else{
-      return false;
+      quitarNombre();
+      quitarPass();
     }
-
+    return validarRespuesta(ids);
   }
 
   Future<String?> getNombre() async{
@@ -49,9 +49,21 @@ class Bloc extends Object with Validators{
     return algo;
   }
 
+  Future<String?> getPass() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? algo = await prefs.getString("pass");
+    return algo;
+  }
+
   void quitarNombre() async{
     final prefs = await SharedPreferences.getInstance();
     prefs.remove("nombre");
+  }
+
+  void quitarPass() async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("pass");
+
   }
 
   dispose(){
@@ -72,6 +84,8 @@ class Bloc extends Object with Validators{
       }),
     );
   }
+
+
 
 
 

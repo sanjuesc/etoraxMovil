@@ -11,22 +11,43 @@ class LoginScreen extends StatefulWidget{
 }
 
 class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull widget para poder esperar al futuro
-
+  bool valueCheck = false;
   Widget build(context){
     final bloc = Provider.of(context);
-    return SafeArea(child: Container(
-      margin: EdgeInsets.all(20.0),
-      child: Column(
-        children: [
-          emailField(bloc),
-          passwordField(bloc),
-          Container(margin: EdgeInsets.only(top: 20.0),),
-          submitButton(bloc),
-        ],
-      ),
-    ));
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Image.asset('assets/images/logo.png'),
+            emailField(bloc),
+            passwordField(bloc),
+            Container(margin: EdgeInsets.only(top: 20.0),),
+            checkBox(),
+            submitButton(bloc),
+          ],
+        ),
+      )
+    );
   }
-}
+
+  checkBox() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return CheckboxListTile(
+          title: const Text('Recordar mis detalles'),
+          value: valueCheck,
+          onChanged: (bool? value) {
+            setState(() {
+              valueCheck = value!;
+            });
+          },
+          secondary: const Icon(Icons.remember_me),
+        );
+      },
+    );
+  }
+
 
 
 Widget emailField(Bloc bloc){
@@ -73,19 +94,44 @@ Widget emailField(Bloc bloc){
 }
 
 Widget passwordField(Bloc bloc){
-  return StreamBuilder(
-    stream: bloc.password,
-    builder: (context, snapshot){
-      return TextField(
-        onChanged: bloc.changePassword,
-        obscureText: true,
-        decoration: InputDecoration(
-          hintText: 'Contraseña',
-          labelText: 'Contraseña',
-          errorText: snapshot.hasError ? snapshot.error.toString() : null,
-        ),
-      );
-    },
+  return FutureBuilder(
+      builder: (context, AsyncSnapshot<String?> passSnap){
+        if(!passSnap.hasData){
+          return StreamBuilder(
+            stream: bloc.password,
+            builder: (context, snapshot){
+              return TextField(
+                onChanged: bloc.changePassword,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Contraseña',
+                  labelText: 'Contraseña',
+                  errorText: snapshot.hasError ? snapshot.error.toString() : null,
+                ),
+              );
+            },
+          );
+        }else{
+          bloc.changePassword(passSnap.data!);
+          bloc.quitarPass();
+          return StreamBuilder(
+            stream: bloc.password,
+            builder: (context, snapshot){
+              return TextField(
+                controller: TextEditingController(text: passSnap.data!),
+                onChanged: bloc.changePassword,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Contraseña',
+                  labelText: 'Contraseña',
+                  errorText: snapshot.hasError ? snapshot.error.toString() : null,
+                ),
+              );
+            },
+          );
+        }
+      },
+    future: bloc.getPass(),
   );
 }
 
@@ -97,16 +143,16 @@ Widget submitButton(Bloc bloc){
       return ElevatedButton (
         child: Text('Login'),
         style: ElevatedButton.styleFrom(
-          primary: Colors.amber,
+          primary: Colors.blueAccent,
           padding: EdgeInsets.symmetric(horizontal: 20.0),),
         onPressed: () async {
+          print(valueCheck);
           FocusManager.instance.primaryFocus?.unfocus(); //no me gusta el 'hack' de poner esto aqui pero si no el teclado no se oculta al clicar
           bool res = false;
-            if(snapshot.hasData){
-              res = await bloc.submit();
-              print(globals.token);
+            if(snapshot.hasData){ //intentamos hacer login
+              res = await bloc.submit(valueCheck);
             }
-            if(!res){
+            if(!res){ //si algo esta mal, sacamos error
               ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
                 content: Text("Usuario y/o contraseña incorrectos"),
                 action: SnackBarAction(
@@ -116,12 +162,13 @@ Widget submitButton(Bloc bloc){
                   },
                 ),
               ));
-            }else{
+            }else{ //si no, vamos al menu
               Navigator.pushNamed(context, "menu");
             }
         },
       );
     },
   );
+}
 
 }

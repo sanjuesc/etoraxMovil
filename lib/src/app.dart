@@ -32,9 +32,15 @@ class App extends StatelessWidget{
           builder: (context){
             return Scaffold(
                 resizeToAvoidBottomInset: false,
-                body: AppBar(
-                  title: Text("ey"),
-                )
+                appBar: AppBar(
+                  title: Text("eTorax 2.0"),
+                ),
+                body: const Center(
+                  child: Text(
+                    'Pagina de inicio estandar',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
             );
           }
       );
