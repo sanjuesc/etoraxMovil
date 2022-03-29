@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../blocs/bloc.dart';
 import '../blocs/provider.dart';
-import '../globals.dart' as globals;
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget{
   State<StatefulWidget> createState() {
@@ -15,19 +14,23 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
   Widget build(context){
     final bloc = Provider.of(context);
     return SafeArea(
-      child: Container(
-        margin: EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Image.asset('assets/images/logo.png'),
-            emailField(bloc),
-            passwordField(bloc),
-            Container(margin: EdgeInsets.only(top: 20.0),),
-            checkBox(),
-            submitButton(bloc),
-          ],
-        ),
-      )
+        child: Container(
+          margin: EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Image.asset('assets/images/logo.png'),
+              emailField(bloc),
+              passwordField(bloc),
+              Container(margin: EdgeInsets.only(top: 20.0),),
+              recordarDatos(),
+              Container(margin: EdgeInsets.only(top: 20.0),),
+              checkBox(),
+              submitButton(bloc),
+              Expanded(child:Container()),//pongo esto aqui para rellenar el espacio hasta el Text
+              faq()
+            ],
+          ),
+        )
     );
   }
 
@@ -50,51 +53,51 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
 
 
 
-Widget emailField(Bloc bloc){
-  return FutureBuilder(builder: (context, AsyncSnapshot<String?> nombreSnap){
-    if(!nombreSnap.hasData){
-      return StreamBuilder(
-        stream: bloc.email,
-        builder: (context, snapshot){
-          return TextField(
-            onChanged: bloc.changeEmail,
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(
-              hintText: '123456',
-              labelText: 'Nombre de usuario',
-              errorText: snapshot.hasError ? snapshot.error.toString() : null,
-            ),
-          );
-        },
-      );
-    }else{
-      bloc.changeEmail(nombreSnap.data!);
-      bloc.quitarNombre();
-      return StreamBuilder(
-        stream: bloc.email,
-        builder: (context, snapshot){
-          return TextField(
-            controller: TextEditingController(text: nombreSnap.data!),
-            onChanged: bloc.changeEmail,
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(
-              hintText: '123456',
-              labelText: 'Nombre de usuario',
-              errorText: snapshot.hasError ? snapshot.error.toString() : null,
-            ),
-          );
-        },
-      );
-    }
-  },
-    future: bloc.getNombre(),
-  );
-  
+  Widget emailField(Bloc bloc){
+    return FutureBuilder(builder: (context, AsyncSnapshot<String?> nombreSnap){
+      if(!nombreSnap.hasData){
+        return StreamBuilder(
+          stream: bloc.email,
+          builder: (context, snapshot){
+            return TextField(
+              onChanged: bloc.changeEmail,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                hintText: '123456',
+                labelText: 'Nombre de usuario',
+                errorText: snapshot.hasError ? snapshot.error.toString() : null,
+              ),
+            );
+          },
+        );
+      }else{
+        bloc.changeEmail(nombreSnap.data!);
+        bloc.quitarNombre();
+        return StreamBuilder(
+          stream: bloc.email,
+          builder: (context, snapshot){
+            return TextField(
+              controller: TextEditingController(text: nombreSnap.data!),
+              onChanged: bloc.changeEmail,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                hintText: '123456',
+                labelText: 'Nombre de usuario',
+                errorText: snapshot.hasError ? snapshot.error.toString() : null,
+              ),
+            );
+          },
+        );
+      }
+    },
+      future: bloc.getNombre(),
+    );
 
-}
 
-Widget passwordField(Bloc bloc){
-  return FutureBuilder(
+  }
+
+  Widget passwordField(Bloc bloc){
+    return FutureBuilder(
       builder: (context, AsyncSnapshot<String?> passSnap){
         if(!passSnap.hasData){
           return StreamBuilder(
@@ -131,24 +134,24 @@ Widget passwordField(Bloc bloc){
           );
         }
       },
-    future: bloc.getPass(),
-  );
-}
+      future: bloc.getPass(),
+    );
+  }
 
-Widget submitButton(Bloc bloc){
+  Widget submitButton(Bloc bloc){
 
-  return StreamBuilder(
-    stream: bloc.submitValid,
-    builder: (context, snapshot){
-      return ElevatedButton (
-        child: Text('Login'),
-        style: ElevatedButton.styleFrom(
-          primary: Colors.blueAccent,
-          padding: EdgeInsets.symmetric(horizontal: 20.0),),
-        onPressed: () async {
-          print(valueCheck);
-          FocusManager.instance.primaryFocus?.unfocus(); //no me gusta el 'hack' de poner esto aqui pero si no el teclado no se oculta al clicar
-          bool res = false;
+    return StreamBuilder(
+      stream: bloc.submitValid,
+      builder: (context, snapshot){
+        return ElevatedButton (
+          child: Text('Login'),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blueAccent,
+            padding: EdgeInsets.symmetric(horizontal: 20.0),),
+          onPressed: () async {
+            print(valueCheck);
+            FocusManager.instance.primaryFocus?.unfocus(); //no me gusta el 'hack' de poner esto aqui pero si no el teclado no se oculta al clicar
+            bool res = false;
             if(snapshot.hasData){ //intentamos hacer login
               res = await bloc.submit(valueCheck);
             }
@@ -165,10 +168,31 @@ Widget submitButton(Bloc bloc){
             }else{ //si no, vamos al menu
               Navigator.pushNamed(context, "menu");
             }
-        },
-      );
-    },
-  );
-}
+          },
+        );
+      },
+    );
+  }
+
+  Widget recordarDatos() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children:   [InkWell(
+          child: Text('No recuerdo mis datos'),
+          onTap: () {
+            print("ey");
+          }
+      ),],
+    );
+  }
+
+  Widget faq() {
+    return InkWell(
+        child: Text('FAQ'),
+        onTap: () {
+          print("ey");
+        }
+    );
+  }
 
 }
