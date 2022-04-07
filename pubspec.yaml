@@ -41,6 +41,11 @@ dependencies:
   get: ^4.6.1
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.13
+  firebase_core: ^1.4.0
+  # Add the dependency for the FlutterFire plugin for Google Analytics
+  firebase_analytics: ^5.0.2
+  firebase_messaging: ^11.2.12
+  overlay_support: ^1.2.1
 
 dev_dependencies:
   flutter_test:

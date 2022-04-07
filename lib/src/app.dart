@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'screens/login_screen.dart';
 import 'blocs/provider.dart';
 import 'globals.dart' as globals;
 class App extends StatelessWidget{
+
+
+
   build(context){
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Provider(
       child: GestureDetector(
         child : MaterialApp(
