@@ -19,7 +19,7 @@ class MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: Drawer(),
+      drawer: miDrawer(),
       appBar: AppBar(
         title: Text("eTorax 2.0"),
       ),
@@ -28,6 +28,55 @@ class MenuScreenState extends State<MenuScreen> {
           "Pagina estandar",
           style: TextStyle(fontSize: 24),
         ),
+      ),
+    );
+  }
+
+  Widget miDrawer() {
+    return Drawer(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 120,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/logo.png"),
+                      fit: BoxFit.fitWidth
+                  )
+              ), child: null,
+            ),
+          ),
+
+          ListTile(
+            title: const Text("Responder preguntas"),
+            onTap: (){
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: const Text("Mis datos"),
+            onTap: (){
+              Navigator.pop(context);
+            },
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 100,
+                color: Colors.blue,// Give height of banner
+                child: ListTile(
+                  title: const Text("Preguntas frecuentes"),
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
