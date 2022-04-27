@@ -1,8 +1,8 @@
+import 'package:etorax/src/screens/menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/login_screen.dart';
 import 'blocs/provider.dart';
-import 'globals.dart' as globals;
 class App extends StatelessWidget{
 
 
@@ -38,18 +38,7 @@ class App extends StatelessWidget{
     }else{
       MaterialPageRoute ruta = MaterialPageRoute(
           builder: (context){
-            return Scaffold(
-                resizeToAvoidBottomInset: false,
-                appBar: AppBar(
-                  title: Text("eTorax 2.0"),
-                ),
-                body: const Center(
-                  child: Text(
-                    'Pagina de inicio estandar',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-            );
+            return MenuScreen();
           }
       );
       return ruta;

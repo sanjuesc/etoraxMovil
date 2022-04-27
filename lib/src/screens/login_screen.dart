@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import '../blocs/bloc.dart';
 import '../blocs/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget{
@@ -10,6 +12,14 @@ class LoginScreen extends StatefulWidget{
 }
 
 class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull widget para poder esperar al futuro
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+
   bool valueCheck = false;
   Widget build(context){
     final bloc = Provider.of(context);
@@ -149,7 +159,6 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
             primary: Colors.blueAccent,
             padding: EdgeInsets.symmetric(horizontal: 20.0),),
           onPressed: () async {
-            print(valueCheck);
             FocusManager.instance.primaryFocus?.unfocus(); //no me gusta el 'hack' de poner esto aqui pero si no el teclado no se oculta al clicar
             bool res = false;
             if(snapshot.hasData){ //intentamos hacer login
@@ -180,7 +189,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
       children:   [InkWell(
           child: Text('No recuerdo mis datos'),
           onTap: () {
-            print("ey");
+            print("DATOS");
           }
       ),],
     );
@@ -190,7 +199,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
     return InkWell(
         child: Text('FAQ'),
         onTap: () {
-          print("ey");
+          print("FAQ");
         }
     );
   }

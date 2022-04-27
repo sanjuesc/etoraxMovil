@@ -30,7 +30,7 @@ class Bloc extends Object with Validators{
   Future<bool> submit(bool guardarUsuPass) async{
     final validEmail = _email.value;
     final validPassword = _password.value;
-    final response = await createAlbum(validEmail, validPassword);
+    final response = await intentarLogin(validEmail, validPassword);
     final ids = json.decode(response.body);
     if(guardarUsuPass){
       final prefs = await SharedPreferences.getInstance();
@@ -40,7 +40,7 @@ class Bloc extends Object with Validators{
       quitarNombre();
       quitarPass();
     }
-    return validarRespuesta(ids);
+    return validarRespuesta(ids, response.statusCode);
   }
 
   Future<String?> getNombre() async{
@@ -72,9 +72,9 @@ class Bloc extends Object with Validators{
   }
 
 
-  Future<Response> createAlbum(String nombre, String pass) {
+  Future<Response> intentarLogin(String nombre, String pass) {
     return post(
-      Uri.parse('http://'+dotenv.env['local']!+'/login/medicoLogin'),
+      Uri.parse('http://'+dotenv.env['local']!+'/login/pacienteLogin'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
