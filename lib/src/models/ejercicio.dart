@@ -8,6 +8,7 @@ class Ejercicio {
   final int freq;
   final String unidad;
   final int cantidad;
+  final int completado;
 
   Ejercicio.fromJson(Map<String, dynamic> parsedJson)
     : idTratEjer = parsedJson['idTratEjer'] ?? 1,
@@ -18,17 +19,19 @@ class Ejercicio {
       repeticiones = parsedJson['repeticiones'] ?? '',
       freq = parsedJson['freq'] ?? 1,
       unidad = parsedJson['unidad'] ?? '',
-      cantidad = parsedJson['cantidad'] ?? 1;
+      cantidad = parsedJson['cantidad'] ?? 1,
+      completado = parsedJson['completado'] ?? 0;
   Ejercicio.fromDb(Map<String, dynamic> parsedJson)
       : idTratEjer = parsedJson['idTratEjer'] ?? 1,
-        idTrat = int.parse(parsedJson['idTrat']),
-        idEjer = int.parse(parsedJson['idEjer']),
+        idTrat = parsedJson['idTrat'],
+        idEjer = parsedJson['idEjer'],
         nombre = parsedJson['nombre']?? '',
         descri = parsedJson['descri']?? '',
         repeticiones = parsedJson['repeticiones']?? '',
         freq = parsedJson['freq'] ?? 1,
         unidad = parsedJson['unidad']?? '',
-        cantidad = parsedJson['cantidad'] ?? 1;
+        cantidad = parsedJson['cantidad'] ?? 1,
+        completado = parsedJson['completado'] ?? 0;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -41,6 +44,7 @@ class Ejercicio {
       "freq": freq,
       "unidad": unidad,
       "cantidad": cantidad,
+      "completado": completado
     };
   }
 

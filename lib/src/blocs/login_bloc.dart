@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
-import 'dart:async';
 import '../globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 

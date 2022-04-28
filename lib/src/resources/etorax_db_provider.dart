@@ -19,7 +19,7 @@ class EtoraxDbProvider implements Source, Cache{
     final path = join(documentsDirectory.path, "ejercicios.db");
     db = await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: (Database newDb, int Version){
         newDb.execute("""
           CREATE TABLE Ejercicios
@@ -31,7 +31,8 @@ class EtoraxDbProvider implements Source, Cache{
               repeticiones INTEGER,
               freq INTEGER,
               unidad TEXT,
-              cantidad INTEGER
+              cantidad INTEGER,
+              completado INTEGER
             )
         """);
       }
