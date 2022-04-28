@@ -37,19 +37,34 @@ class NewsListTile extends StatelessWidget{
   }
 
   Widget buildTile(BuildContext buildContext, Ejercicio? item){
-      return Column(
-        children: [
-          ListTile(
+      return Card(
+        elevation: 8.0,
+        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+        child: Container(
+            decoration: BoxDecoration(color: Colors.white60),
+            child: ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            leading: Container(
+              padding: EdgeInsets.only(right: 12.0),
+              decoration: new BoxDecoration(
+                  border: new Border(
+                      right: new BorderSide(width: 1.0, color: Colors.grey))),
+              child: Icon(Icons.directions_walk, color: Colors.grey),
+            ),
             onTap: (){
             },
             title: Text(item!.nombre),
-            subtitle: Text(item.descri),
-          ),
-          Divider(
-            height: 2.0,
-          ),
-        ],
+            subtitle: Row(
+              children: <Widget>[
+                Icon(Icons.linear_scale, color: Colors.grey),
+                Text("Sin completar")
+              ],
+            ),
+            trailing:    Icon(Icons.keyboard_arrow_right, color: Colors.grey, size: 30.0),
+          )
+        ),
       );
+
   }
 
 }

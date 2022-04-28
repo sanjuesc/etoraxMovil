@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../blocs/ejerc_provider.dart';
 import '../blocs/ejerc_bloc.dart';
-import '../widgets/news_list_tile.dart';
+import '../widgets/ejercicios_list_tile.dart';
 import '../widgets/refresh.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
