@@ -9,7 +9,7 @@ import 'dart:async';
 import '../globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Bloc extends Object with Validators{
+class LoginBloc extends Object with Validators{
 
 
   final _email = BehaviorSubject<String>();
@@ -40,7 +40,11 @@ class Bloc extends Object with Validators{
       quitarNombre();
       quitarPass();
     }
-    return validarRespuesta(ids, response.statusCode);
+    bool algo = validarRespuesta(ids, response.statusCode);
+    if(algo){
+      globals.usuario=validEmail;
+    }
+    return algo;
   }
 
   Future<String?> getNombre() async{

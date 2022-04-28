@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../blocs/bloc.dart';
-import '../blocs/provider.dart';
+import '../blocs/login_bloc.dart';
+import '../blocs/login_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 
@@ -22,7 +22,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
 
   bool valueCheck = false;
   Widget build(context){
-    final bloc = Provider.of(context);
+    final bloc = LoginProvider.of(context);
     return SafeArea(
         child: Container(
           margin: EdgeInsets.all(20.0),
@@ -63,7 +63,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
 
 
 
-  Widget emailField(Bloc bloc){
+  Widget emailField(LoginBloc bloc){
     return FutureBuilder(builder: (context, AsyncSnapshot<String?> nombreSnap){
       if(!nombreSnap.hasData){
         return StreamBuilder(
@@ -106,7 +106,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
 
   }
 
-  Widget passwordField(Bloc bloc){
+  Widget passwordField(LoginBloc bloc){
     return FutureBuilder(
       builder: (context, AsyncSnapshot<String?> passSnap){
         if(!passSnap.hasData){
@@ -148,7 +148,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
     );
   }
 
-  Widget submitButton(Bloc bloc){
+  Widget submitButton(LoginBloc bloc){
 
     return StreamBuilder(
       stream: bloc.submitValid,

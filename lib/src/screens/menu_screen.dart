@@ -1,34 +1,23 @@
 import 'package:flutter/material.dart';
+import '../blocs/ejerc_provider.dart';
+import '../blocs/ejerc_bloc.dart';
+import '../widgets/news_list_tile.dart';
+import '../widgets/refresh.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
+import '../globals.dart' as globals;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+class MenuScreen extends StatelessWidget{
 
-
-class MenuScreen extends StatefulWidget{
-  State<StatefulWidget> createState() {
-    return MenuScreenState();
-  }
-}
-
-class MenuScreenState extends State<MenuScreen> {
-  //hay que cambiar a statefull widget para poder esperar al futuro
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final ejercbloc = EjercProvider.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: miDrawer(),
       appBar: AppBar(
         title: Text("eTorax 2.0"),
       ),
-      body: const Center(
-        child: Text(
-          "Pagina estandar",
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
+      body: buildList(ejercbloc),
     );
   }
 
@@ -52,13 +41,25 @@ class MenuScreenState extends State<MenuScreen> {
           ListTile(
             title: const Text("Responder preguntas"),
             onTap: (){
-              Navigator.pop(context);
+
             },
           ),
           ListTile(
             title: const Text("Mis datos"),
-            onTap: (){
-              Navigator.pop(context);
+            onTap: () async{
+              Client client = Client();
+              final respuesta = await client.post(
+                Uri.parse('http://'+dotenv.env['local']!+'/paciente/getEjerciciosActuales'),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                  'access-token': globals.token,
+                },
+                body: jsonEncode(<String, String>{
+                  'pacId': globals.usuario,
+                }),
+              );
+              final ids = json.decode(respuesta.body);
+              print(ids);
             },
           ),
           Expanded(
@@ -70,7 +71,6 @@ class MenuScreenState extends State<MenuScreen> {
                 child: ListTile(
                   title: const Text("Preguntas frecuentes"),
                   onTap: (){
-                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -80,5 +80,30 @@ class MenuScreenState extends State<MenuScreen> {
       ),
     );
   }
+
+  Widget buildList(EjercBloc ejercBloc){
+    return StreamBuilder(
+      stream: ejercBloc.idsTE,
+      builder: (context, AsyncSnapshot<List<int>> snapshot){
+        print(snapshot);
+        if(!snapshot.hasData){
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }else{
+          return Refresh(child: ListView.builder(
+            itemCount: snapshot.data?.length,
+            itemBuilder: (context, int index){
+              ejercBloc.fetchItem(snapshot.data![index]);
+              return NewsListTile(itemId: snapshot.data![index]);
+            },
+          ));
+        }
+      },
+
+    );
+
+  }
+
 
 }
