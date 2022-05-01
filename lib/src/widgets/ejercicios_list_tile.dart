@@ -54,6 +54,7 @@ class NewsListTile extends StatelessWidget{
               child: Icon(Icons.directions_walk, color: Colors.grey),
             ),
             onTap: (){
+              Navigator.pushNamed(buildContext, 'detalles', arguments: item);
             },
             title: Text(item.nombre),
             subtitle: Row(
