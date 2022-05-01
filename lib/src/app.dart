@@ -6,6 +6,7 @@ import 'screens/login_screen.dart';
 import 'screens/detalles_screen.dart';
 import 'blocs/login_provider.dart';
 import 'blocs/ejerc_provider.dart';
+import 'screens/mis_detalles.dart';
 class App extends StatelessWidget{
   build(context){
     SystemChrome.setPreferredOrientations([
@@ -41,24 +42,30 @@ class App extends StatelessWidget{
           }
       );
     }else{
-      print(settings.name);
-      if(settings.name=='menu'){
+      if(settings.name=='menu') {
         return MaterialPageRoute(
-            builder: (context){
+            builder: (context) {
               final storiesBloc = EjercProvider.of(context);
               storiesBloc.fetchEjercicios();
               return MenuScreen();
             }
         );
-      }else{
-        final args = settings.arguments as Ejercicio;
-        return MaterialPageRoute(
-            builder: (context){
-              return DetallesScreen(key: null,ejer: args);
-            }
-        );
+      }else {
+        if (settings.name == 'misDatos') {
+          return MaterialPageRoute(
+              builder: (context) {
+                return MisDetalles();
+              }
+          );
+        } else {
+          final args = settings.arguments as Ejercicio;
+          return MaterialPageRoute(
+              builder: (context) {
+                return DetallesScreen(key: null, ejer: args);
+              }
+          );
+        }
       }
-
 
     }
 
