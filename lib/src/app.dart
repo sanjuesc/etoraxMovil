@@ -46,6 +46,7 @@ class App extends StatelessWidget{
         return MaterialPageRoute(
             builder: (context) {
               final storiesBloc = EjercProvider.of(context);
+              storiesBloc.clearCache();
               storiesBloc.fetchEjercicios();
               return MenuScreen();
             }

@@ -76,7 +76,7 @@ class LoginBloc extends Object with Validators{
 
   Future<Response> intentarLogin(String nombre, String pass) {
     return post(
-      Uri.parse('http://'+dotenv.env['local']!+'/login/pacienteLogin'),
+      Uri.parse('http://'+dotenv.env['server']!+'/login/pacienteLogin'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
