@@ -47,34 +47,49 @@ class MenuScreen extends StatelessWidget{
 
   }
 
-  Widget SinEjercicios(BuildContext context) {
-    return Align(
-        child: Card(
-          elevation: 8.0,
-          margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: Container(
-              decoration: BoxDecoration(color: Colors.white60),
-              child: ListTile(
-                onTap: (){
-                  final bloc = EjercProvider.of(context);
-                  bloc.clearCache();
-                  bloc.fetchEjercicios();
-                },
-                leading: Container(              padding: EdgeInsets.only(right: 12.0),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          right: BorderSide(width: 1.0, color: Colors.grey))),
-                  child: Icon(Icons.directions_walk, color: Colors.grey),
-                ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                title: Text("No tienes ejercicios para el día de hoy"),
-                subtitle: Text("Crees que puede ser un error? Recargar la aplicación"),
-                trailing:    Icon(Icons.update, color: Colors.grey, size: 30.0),
-              )
-          ),
-      ),
-      alignment: Alignment.topCenter,
+  Widget SinEjercicios(BuildContext miContext) {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot<String> esperado){
+        if(!esperado.hasData){
+          return CircularProgressIndicator();
+        }else{
+          return Align(
+            child: Card(
+              elevation: 8.0,
+              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+              child: Container(
+                  decoration: BoxDecoration(color: Colors.white60),
+                  child: ListTile(
+                    onTap: (){
+                      final bloc = EjercProvider.of(context);
+                      bloc.clearCache();
+                      bloc.fetchEjercicios();
+                    },
+                    leading: Container(              padding: EdgeInsets.only(right: 12.0),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              right: BorderSide(width: 1.0, color: Colors.grey))),
+                      child: Icon(Icons.directions_walk, color: Colors.grey),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    title: Text("No tienes ejercicios para el día de hoy"),
+                    subtitle: Text("Crees que puede ser un error? Recargar la aplicación"),
+                    trailing:    Icon(Icons.update, color: Colors.grey, size: 30.0),
+                  )
+              ),
+            ),
+            alignment: Alignment.topCenter,
+          );
+        }
+      },
+      future: esperar(),
+
     );
+  }
+
+  Future<String> esperar() async{
+    await Future.delayed(Duration(seconds: 10));
+    return Future<String>.value('Back to the future!');;
   }
 
 
