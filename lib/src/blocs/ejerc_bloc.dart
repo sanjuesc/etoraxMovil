@@ -44,6 +44,11 @@ class EjercBloc extends Object with Validators{
   Future<bool> ejercCompletado(String ejerId, String tratId) async{
     Response response = await getCompletado(globals.usuario, ejerId, tratId);
     final ids = json.decode(response.body);
+    Map<String, dynamic> data = jsonDecode(response.body);
+    if(data['token']!=null) {
+      globals.token = data['token'];
+    }
+    print(data);
     bool algo = validarRespuesta(ids, response.statusCode);
     return algo;
   }
