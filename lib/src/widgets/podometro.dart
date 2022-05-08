@@ -1,5 +1,10 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:etorax/src/blocs/ejerc_provider.dart';
+import '../globals.dart' as globals;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart';
 import '../models/ejercicio.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
@@ -25,15 +30,72 @@ enum AppState {
   DATA_NOT_ADDED,
   STEPS_READY,
 }
-
 class _HealthAppState extends State<HealthApp> {
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
   int _nofSteps = 10;
-  double _mgdl = 10.0;
-
-  // create a HealthFactory for use in the app
+  double distDelta = 10.0;
   HealthFactory health = HealthFactory();
+
+  /// Fetch data points from the health plugin and show them in the app.
+  Future fetchData() async {
+    setState(() => _state = AppState.FETCHING_DATA);
+
+    // define the types to get
+    final types = [
+      HealthDataType.DISTANCE_DELTA,
+      HealthDataType.MOVE_MINUTES,
+      // Uncomment this line on iOS - only available on iOS
+      // HealthDataType.DISTANCE_WALKING_RUNNING,
+    ];
+
+    // with coresponsing permissions
+    final permissions = [
+      HealthDataAccess.READ,
+      HealthDataAccess.READ,
+    ];
+
+    // get data within the last 24 hours
+    final now = DateTime.now();
+    final midnight = DateTime(now.year, now.month, now.day);
+
+    // requesting access to the data types before reading them
+    // note that strictly speaking, the [permissions] are not
+    // needed, since we only want READ access.
+    bool requested =
+    await health.requestAuthorization(types, permissions: permissions);
+
+    if (requested) {
+      try {
+        // fetch health data
+        List<HealthDataPoint> healthData =
+        await health.getHealthDataFromTypes(midnight, now, types);
+
+        // save all the new data points (only the first 100)
+        _healthDataList.addAll((healthData.length < 100)
+            ? healthData
+            : healthData.sublist(0, 100));
+      } catch (error) {
+        print("Exception in getHealthDataFromTypes: $error");
+      }
+
+      // filter out duplicates
+      _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
+
+      // print the results
+      _healthDataList.forEach((x) => print(x));
+
+      // update the UI to display the results
+      setState(() {
+        _state =
+        _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
+      });
+    } else {
+      print("Authorization not granted");
+      setState(() => _state = AppState.DATA_NOT_FETCHED);
+    }
+  }
+
 
 
   /// Fetch steps from the health plugin and show them in the app.
@@ -65,85 +127,124 @@ class _HealthAppState extends State<HealthApp> {
     }
   }
 
-  Widget _contentFetchingData() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-            padding: EdgeInsets.all(20),
-            child: CircularProgressIndicator(
-              strokeWidth: 10,
-            )),
-        Text('Fetching data...')
-      ],
-    );
-  }
 
   Widget _contentDataReady() {
-    return ListView.builder(
-        itemCount: _healthDataList.length,
-        itemBuilder: (_, index) {
-          HealthDataPoint p = _healthDataList[index];
-          return ListTile(
-            title: Text("${p.typeString}: ${p.value}"),
-            trailing: Text('${p.unitString}'),
-            subtitle: Text('${p.dateFrom} - ${p.dateTo}'),
-          );
-        });
+    distDelta=0.0;
+    _healthDataList.forEach((element) {
+      if(element.typeString=='DISTANCE_DELTA'){
+        print("EY");
+        distDelta+=element.value;
+      }else{
+        print("otro");
+        print("${element.typeString}");
+
+      }
+    });
+    if(widget.ejerc.completado==1){
+      return Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.check, color: Colors.green),
+              title: Text(widget.ejerc.nombre),
+              subtitle: Text(widget.ejerc.descri),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Flexible(child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),),
+              ],
+            ),
+          ],
+        ),
+      );
+    }else{
+      if(distDelta<=widget.ejerc.cantidad){
+        return Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.pending_actions, color: Colors.red),
+                title: Text(widget.ejerc.nombre),
+                subtitle: Text(widget.ejerc.descri),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),),
+                ],
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  completar();
+                },
+                child: Text("He finalizado  ✔"),
+              ),
+            ],
+          ),
+        );
+      }else{
+        return Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.pending_actions, color: Colors.red),
+                title: Text(widget.ejerc.nombre),
+                subtitle: Text(widget.ejerc.descri),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),),
+                ],
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
   }
 
-  Widget _contentNoData() {
-    return Text('No Data to show');
-  }
 
-  Widget _contentNotFetched() {
-    return Column(
-      children: [
-        Text('Inicia sesión con tu cuenta de Google para continuar'),
-      ],
-      mainAxisAlignment: MainAxisAlignment.center,
-    );
-  }
 
-  Widget _authorizationNotGranted() {
-    return Text('Authorization not given. '
-        'For Android please check your OAUTH2 client ID is correct in Google Developer Console. '
-        'For iOS check your permissions in Apple Health.');
-  }
 
-  Widget _dataAdded() {
-    return Text('$_nofSteps steps and $_mgdl mgdl are inserted successfully!');
-  }
 
   Widget _stepsFetched() {
-    return Text('Total number of steps: $_nofSteps de los ${widget.ejerc.cantidad} ${widget.ejerc.unidad} ');
+    return Text('Total number of steps: $_nofSteps');
   }
 
-  Widget _dataNotAdded() {
-    return Text('Failed to add data');
-  }
 
-  Widget _content() {
-    if (_state == AppState.DATA_READY)
-      return _contentDataReady();
-    else if (_state == AppState.NO_DATA)
-      return _contentNoData();
-    else if (_state == AppState.FETCHING_DATA)
-      return _contentFetchingData();
-    else if (_state == AppState.AUTH_NOT_GRANTED)
-      return _authorizationNotGranted();
-    else if (_state == AppState.DATA_ADDED)
-      return _dataAdded();
-    else if (_state == AppState.STEPS_READY)
-      return _stepsFetched();
-    else if (_state == AppState.DATA_NOT_ADDED) return _dataNotAdded();
-
-    return _contentNotFetched();
-  }
 
   @override
   Widget build(BuildContext context) {
-    fetchStepData();
-    return _content();
+    fetchData();
+    return _contentDataReady();
+  }
+
+  Future<void> completar() async {
+    Client client = Client();
+    final respuesta = await client.post(
+      Uri.parse('http://'+dotenv.env['server']!+'/paciente/completarEjer'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'access-token': globals.token,
+      },
+      body: jsonEncode(<String, String>{
+        'pacId': globals.usuario,
+        'idTratEjer': widget.ejerc.idTratEjer.toString(),
+      }),
+    );
+    Map<String, dynamic> data = jsonDecode(respuesta.body);
+    if(data['token']!=null) {
+      globals.token = data['token'];
+    }
+    print("ALLEVOY");
+    if(data['mensaje'].toString().contains("correctamente")){
+      Navigator.popAndPushNamed(context, "menu");
+    }
   }
 }

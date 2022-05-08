@@ -34,9 +34,7 @@ class DetallesScreen extends StatelessWidget{
                     width: double.infinity,
                     child: videoWidget(snapshot.data!['video']),
                   ),
-                  body: Center(
-                    child: HealthApp(ejerc: ejer),
-                  ),
+                  body: HealthApp(ejerc: ejer),
                   maxHeight: 480.0,
                 );
               }else{ //si no ejercicio estandar
@@ -61,7 +59,7 @@ class DetallesScreen extends StatelessWidget{
                       child: videoWidget(snapshot.data!['video']),
                     ),
                     body: Align(
-                      child: ejercicioEstandar(ejer),
+                      child: ejercicioEstandar(ejer, context),
                       alignment: Alignment.topCenter,
                     ),
                     maxHeight: 480.0,
@@ -130,7 +128,7 @@ class DetallesScreen extends StatelessWidget{
     );
   }
 
-  Widget ejercicioEstandar(Ejercicio ejer) {
+  Widget ejercicioEstandar(Ejercicio ejer, BuildContext context) {
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -148,7 +146,7 @@ class DetallesScreen extends StatelessWidget{
           ),
           OutlinedButton(
             onPressed: () {
-              // Respond to button press
+              completar(context);
             },
             child: Text("He finalizado  ✔"),
           ),
@@ -180,6 +178,28 @@ class DetallesScreen extends StatelessWidget{
 
   }
 
+  Future<void> completar(BuildContext context) async {
+    Client client = Client();
+    final respuesta = await client.post(
+      Uri.parse('http://'+dotenv.env['server']!+'/paciente/completarEjer'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'access-token': globals.token,
+      },
+      body: jsonEncode(<String, String>{
+        'pacId': globals.usuario,
+        'idTratEjer': ejer.idTratEjer.toString(),
+      }),
+    );
+    Map<String, dynamic> data = jsonDecode(respuesta.body);
+    if(data['token']!=null) {
+      globals.token = data['token'];
+    }
+    print("ALLEVOY");
+    if(data['mensaje'].toString().contains("correctamente")){
+      Navigator.popAndPushNamed(context, "menu");
+    }
+  }
 
 
 }
