@@ -1,4 +1,4 @@
-
+import 'src/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'src/app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,7 +19,7 @@ Future main() async{
 
   String? token = await FirebaseMessaging.instance.getToken();
   print("Token = $token");
-
+  globals.firebaseToken=token!;
 
   await dotenv.load(fileName: ".env");
   runApp(App());

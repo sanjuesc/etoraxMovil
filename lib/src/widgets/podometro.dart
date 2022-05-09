@@ -160,7 +160,7 @@ class _HealthAppState extends State<HealthApp> {
         ),
       );
     }else{
-      if(distDelta<=widget.ejerc.cantidad){
+      if(distDelta>=widget.ejerc.cantidad){
         return Card(
           child: Column(
             mainAxisSize: MainAxisSize.min,

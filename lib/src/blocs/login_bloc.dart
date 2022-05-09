@@ -82,7 +82,8 @@ class LoginBloc extends Object with Validators{
       },
       body: jsonEncode(<String, String>{
         'usuario': nombre,
-        'contraseña' : pass
+        'contraseña' : pass,
+        'firebaseToken' : globals.firebaseToken
       }),
     );
   }
