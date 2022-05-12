@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:etorax/src/blocs/ejerc_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../globals.dart' as globals;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -29,18 +30,18 @@ enum AppState {
   DATA_ADDED,
   DATA_NOT_ADDED,
   STEPS_READY,
+  MANUAL,
+  AUTOMATICO
 }
 class _HealthAppState extends State<HealthApp> {
   List<HealthDataPoint> _healthDataList = [];
-  AppState _state = AppState.DATA_NOT_FETCHED;
+  AppState _state = AppState.AUTH_NOT_GRANTED;
   int _nofSteps = 10;
   double distDelta = 10.0;
   HealthFactory health = HealthFactory();
 
   /// Fetch data points from the health plugin and show them in the app.
   Future fetchData() async {
-    setState(() => _state = AppState.FETCHING_DATA);
-
     // define the types to get
     final types = [
       HealthDataType.DISTANCE_DELTA,
@@ -86,13 +87,9 @@ class _HealthAppState extends State<HealthApp> {
       _healthDataList.forEach((x) => print(x));
 
       // update the UI to display the results
-      setState(() {
-        _state =
-        _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
-      });
     } else {
       print("Authorization not granted");
-      setState(() => _state = AppState.DATA_NOT_FETCHED);
+
     }
   }
 
@@ -221,8 +218,21 @@ class _HealthAppState extends State<HealthApp> {
 
   @override
   Widget build(BuildContext context) {
-    fetchData();
-    return _contentDataReady();
+    getPrefs();
+    if(_state == AppState.MANUAL){
+      return Text("Manual");
+    }else if (_state == AppState.AUTOMATICO){
+      fetchData();
+      return _contentDataReady();
+    } else if (_state == AppState.AUTH_NOT_GRANTED){
+      return CircularProgressIndicator();
+    } else{
+      return preguntar();
+    }
+
+
+
+
   }
 
   Future<void> completar() async {
@@ -246,5 +256,66 @@ class _HealthAppState extends State<HealthApp> {
     if(data['mensaje'].toString().contains("correctamente")){
       Navigator.popAndPushNamed(context, "menu");
     }
+  }
+
+  Widget preguntar() {
+    return Column(
+      children: [Text("eTorax puede detectar tu progreso automaticamente mediante el podometro de tu movil"),
+        OutlinedButton(
+          onPressed: () {
+            setManu();
+            setState(() {
+              _state=AppState.MANUAL;
+            });
+          },
+          child: Text("Manual"),
+        ),
+        OutlinedButton(
+          onPressed: () {
+            setAuto();
+            setState(() {
+              _state=AppState.AUTOMATICO;
+            });
+          },
+          child: Text("Automatica"),
+        ),
+      ]
+    );
+
+  }
+
+
+  Future getPrefs() async{
+    var prefs = await SharedPreferences.getInstance();
+    String? modo = prefs.getString("modo");
+    print(modo);
+    print(_state);
+    if(modo == null && _state!=AppState.FETCHING_DATA){
+      setState(() {
+        _state=AppState.FETCHING_DATA;
+      });
+    }
+    if(modo=="Automatico" && _state!=AppState.AUTOMATICO){
+      print("era auto");
+      setState(() {
+        _state=AppState.AUTOMATICO;
+      });
+    }else if (modo=="Manual" && _state!=AppState.MANUAL){
+      print("era manu");
+      setState(() {
+        _state=AppState.MANUAL;
+      });
+    }
+  }
+
+
+  Future setAuto() async{
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString("modo", "Automatico");
+  }
+
+  Future setManu() async{
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString("modo", "Manual");
   }
 }
