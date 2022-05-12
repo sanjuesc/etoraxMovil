@@ -22,16 +22,12 @@ class HealthApp extends StatefulWidget {
 }
 
 enum AppState {
-  DATA_NOT_FETCHED,
   FETCHING_DATA,
-  DATA_READY,
-  NO_DATA,
   AUTH_NOT_GRANTED,
-  DATA_ADDED,
-  DATA_NOT_ADDED,
-  STEPS_READY,
   MANUAL,
-  AUTOMATICO
+  AUTOMATICO,
+  CARGADO,
+  CARGANDO
 }
 class _HealthAppState extends State<HealthApp> {
   List<HealthDataPoint> _healthDataList = [];
@@ -84,43 +80,15 @@ class _HealthAppState extends State<HealthApp> {
       _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
 
       // print the results
-      _healthDataList.forEach((x) => print(x));
 
       // update the UI to display the results
-    } else {
-      print("Authorization not granted");
-
-    }
-  }
-
-
-
-  /// Fetch steps from the health plugin and show them in the app.
-  Future fetchStepData() async {
-    int? steps;
-
-    // get steps for today (i.e., since midnight)
-    final now = DateTime.now();
-    final midnight = DateTime(now.year, now.month, now.day);
-
-    bool requested = await health.requestAuthorization([HealthDataType.STEPS]);
-
-    if (requested) {
-      try {
-        steps = await health.getTotalStepsInInterval(midnight, now);
-      } catch (error) {
-        print("Caught exception in getTotalStepsInInterval: $error");
-      }
-
-      print('Total number of steps: $steps');
-
       setState(() {
-        _nofSteps = (steps == null) ? 0 : steps;
-        _state = (steps == null) ? AppState.NO_DATA : AppState.STEPS_READY;
+        _state =
+        _healthDataList.isEmpty ? AppState.CARGANDO : AppState.CARGADO;
       });
     } else {
       print("Authorization not granted");
-      setState(() => _state = AppState.DATA_NOT_FETCHED);
+
     }
   }
 
@@ -129,12 +97,8 @@ class _HealthAppState extends State<HealthApp> {
     distDelta=0.0;
     _healthDataList.forEach((element) {
       if(element.typeString=='DISTANCE_DELTA'){
-        print("EY");
         distDelta+=element.value;
       }else{
-        print("otro");
-        print("${element.typeString}");
-
       }
     });
     if(widget.ejerc.completado==1){
@@ -219,18 +183,18 @@ class _HealthAppState extends State<HealthApp> {
   @override
   Widget build(BuildContext context) {
     getPrefs();
-    if(_state == AppState.MANUAL){
+    if(_state == AppState.MANUAL) {
       return Text("Manual");
+    }else if(_state == AppState.CARGADO){
+      return _contentDataReady();
     }else if (_state == AppState.AUTOMATICO){
       fetchData();
-      return _contentDataReady();
+      return Text("cargando");
     } else if (_state == AppState.AUTH_NOT_GRANTED){
       return CircularProgressIndicator();
     } else{
       return preguntar();
     }
-
-
 
 
   }
@@ -252,7 +216,6 @@ class _HealthAppState extends State<HealthApp> {
     if(data['token']!=null) {
       globals.token = data['token'];
     }
-    print("ALLEVOY");
     if(data['mensaje'].toString().contains("correctamente")){
       Navigator.popAndPushNamed(context, "menu");
     }
@@ -290,21 +253,23 @@ class _HealthAppState extends State<HealthApp> {
     String? modo = prefs.getString("modo");
     print(modo);
     print(_state);
-    if(modo == null && _state!=AppState.FETCHING_DATA){
-      setState(() {
-        _state=AppState.FETCHING_DATA;
-      });
-    }
-    if(modo=="Automatico" && _state!=AppState.AUTOMATICO){
-      print("era auto");
-      setState(() {
-        _state=AppState.AUTOMATICO;
-      });
-    }else if (modo=="Manual" && _state!=AppState.MANUAL){
-      print("era manu");
-      setState(() {
-        _state=AppState.MANUAL;
-      });
+    if(_state != AppState.CARGADO && _state != AppState.CARGANDO){
+      if(modo == null && _state!=AppState.FETCHING_DATA){
+        setState(() {
+          _state=AppState.FETCHING_DATA;
+        });
+      }
+      if(modo=="Automatico" && _state!=AppState.AUTOMATICO){
+        print("era auto");
+        setState(() {
+          _state=AppState.AUTOMATICO;
+        });
+      }else if (modo=="Manual" && _state!=AppState.MANUAL){
+        print("era manu");
+        setState(() {
+          _state=AppState.MANUAL;
+        });
+      }
     }
   }
 
