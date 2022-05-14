@@ -1,8 +1,10 @@
 import 'dart:ui';
-
+import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import '../widgets/drawer.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
+import '../globals.dart' as globals;
 class PrimeraConex extends StatefulWidget{
 
   State<StatefulWidget> createState() {
@@ -81,10 +83,41 @@ class PrimeraConexState extends State<PrimeraConex>{ //hacer stateful widget htt
                   );
                 }).toList(),),),
             ElevatedButton(
-              onPressed: () { print(preg4); },
+              onPressed: () {
+                completarPreguntas();
+                Navigator.pushReplacementNamed(context, "menu");
+                },
               child: Text("Enviar"),)
           ],
         )
     );
   }
+
+
+  completarPreguntas(){
+    Client client = Client();
+    client.post(
+      Uri.parse('http://'+dotenv.env['server']!+'/paciente/completarPrimeraConex'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'access-token': globals.token,
+      },
+      body: jsonEncode(<String, String>{
+        'pacId': globals.usuario,
+        'preg1': castellanoToBool(preg1),
+        'preg2': castellanoToBool(preg2),
+        'preg3': castellanoToBool(preg3),
+        'preg4': castellanoToBool(preg4),
+      }),
+    );
+  }
+
+  String castellanoToBool(String valor){
+    if(valor=="Si"){
+      return "1";
+    }else{
+      return "0";
+    }
+  }
+
 }
