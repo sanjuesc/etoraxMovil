@@ -161,8 +161,10 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
           onPressed: () async {
             FocusManager.instance.primaryFocus?.unfocus(); //no me gusta el 'hack' de poner esto aqui pero si no el teclado no se oculta al clicar
             bool res = false;
+            bool primeraConex = true;
             if(snapshot.hasData){ //intentamos hacer login
               res = await bloc.submit(valueCheck);
+              primeraConex = await bloc.primeraConex();
             }
             if(!res){ //si algo esta mal, sacamos error
               ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
@@ -174,8 +176,16 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
                   },
                 ),
               ));
-            }else{ //si no, vamos al menu
-              Navigator.pushNamed(context, "menu");
+            }else{
+              print("primera conex");
+              print(primeraConex);
+              if(primeraConex){
+                Navigator.pushReplacementNamed(context, "primeraConex");
+              }else{
+                Navigator.pushNamed(context, "menu");
+                //si no, vamos al menu
+              }
+
             }
           },
         );

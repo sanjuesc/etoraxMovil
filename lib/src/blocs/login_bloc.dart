@@ -89,6 +89,25 @@ class LoginBloc extends Object with Validators{
   }
 
 
+  Future<bool> primeraConex() async{
+    final validEmail = _email.value;
+    final response = await comprobarPrimeraConex(validEmail);
+    final ids = json.decode(response.body);
+    print(ids["mensaje"]);
+    return ids["mensaje"];
+  }
+  Future<Response> comprobarPrimeraConex(String nombre) {
+    return post(
+      Uri.parse('http://'+dotenv.env['server']!+'/paciente/primeraConex'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'access-token': globals.token,
+      },
+      body: jsonEncode(<String, String>{
+        'pacId': nombre,
+      }),
+    );
+  }
 
 
 

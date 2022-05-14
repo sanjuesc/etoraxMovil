@@ -8,6 +8,7 @@ import 'blocs/login_provider.dart';
 import 'blocs/ejerc_provider.dart';
 import 'screens/mis_detalles.dart';
 import 'screens/faq.dart';
+import 'screens/primera_conex.dart';
 class App extends StatelessWidget{
   build(context){
     SystemChrome.setPreferredOrientations([
@@ -60,12 +61,18 @@ class App extends StatelessWidget{
               }
           );
         } else {
-          print("else");
           if (settings.name == 'faq') {
             print("faq");
             return MaterialPageRoute(
                 builder: (context) {
                   return Faq();
+                }
+            );
+          } if (settings.name == 'primeraConex') {
+            print("primeraConex");
+            return MaterialPageRoute(
+                builder: (context) {
+                  return PrimeraConex();
                 }
             );
           } else {
