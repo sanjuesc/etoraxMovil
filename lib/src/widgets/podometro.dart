@@ -189,9 +189,9 @@ class _HealthAppState extends State<HealthApp> {
       return _contentDataReady();
     }else if (_state == AppState.AUTOMATICO){
       fetchData();
-      return Text("cargando");
+      return Center(child: CircularProgressIndicator(),);
     } else if (_state == AppState.AUTH_NOT_GRANTED){
-      return CircularProgressIndicator();
+      return Center(child: CircularProgressIndicator(),);
     } else{
       return preguntar();
     }

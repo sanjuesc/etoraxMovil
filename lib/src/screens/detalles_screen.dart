@@ -68,7 +68,7 @@ class DetallesScreen extends StatelessWidget{
               }
             }
           }else{
-            return CircularProgressIndicator();
+            return  Center(child: CircularProgressIndicator(),);
           }
         },
         future: obtenerOtros(),

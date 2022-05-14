@@ -51,6 +51,9 @@ dependencies:
   permission_handler: ^9.2.0
   health: ^3.4.4
   animate_icons: ^2.0.0
+  workmanager: ^0.4.1
+  fluttertoast: ^8.0.9
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

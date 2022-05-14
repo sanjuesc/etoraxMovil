@@ -7,6 +7,7 @@ import 'screens/detalles_screen.dart';
 import 'blocs/login_provider.dart';
 import 'blocs/ejerc_provider.dart';
 import 'screens/mis_detalles.dart';
+import 'screens/faq.dart';
 class App extends StatelessWidget{
   build(context){
     SystemChrome.setPreferredOrientations([
@@ -31,18 +32,18 @@ class App extends StatelessWidget{
     );
   }
 
-  Route routes(RouteSettings settings){
-    if (settings.name=='/'){
+  Route routes(RouteSettings settings) {
+    if (settings.name == '/') {
       return MaterialPageRoute(
-          builder: (context){
+          builder: (context) {
             return Scaffold(
               resizeToAvoidBottomInset: false,
               body: LoginScreen(),
             );
           }
       );
-    }else{
-      if(settings.name=='menu') {
+    } else {
+      if (settings.name == 'menu') {
         return MaterialPageRoute(
             builder: (context) {
               final storiesBloc = EjercProvider.of(context);
@@ -51,7 +52,7 @@ class App extends StatelessWidget{
               return MenuScreen();
             }
         );
-      }else {
+      } else {
         if (settings.name == 'misDatos') {
           return MaterialPageRoute(
               builder: (context) {
@@ -59,19 +60,26 @@ class App extends StatelessWidget{
               }
           );
         } else {
-          final args = settings.arguments as Ejercicio;
-          return MaterialPageRoute(
-              builder: (context) {
-                return DetallesScreen(key: null, ejer: args);
-              }
-          );
+          print("else");
+          if (settings.name == 'faq') {
+            print("faq");
+            return MaterialPageRoute(
+                builder: (context) {
+                  return Faq();
+                }
+            );
+          } else {
+            print("detalles");
+            final args = settings.arguments as Ejercicio;
+            return MaterialPageRoute(
+                builder: (context) {
+                  return DetallesScreen(key: null, ejer: args);
+                }
+            );
+          }
         }
       }
-
     }
-
-
   }
-
 
 }
