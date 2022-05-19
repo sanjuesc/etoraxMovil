@@ -1,5 +1,8 @@
+
+
 import 'models/ejercicio.dart';
-import 'package:etorax/src/screens/menu_screen.dart';
+import 'screens/menu_screen.dart';
+import 'screens/cambiarPass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/login_screen.dart';
@@ -76,13 +79,20 @@ class App extends StatelessWidget{
                 }
             );
           } else {
-            print("detalles");
-            final args = settings.arguments as Ejercicio;
-            return MaterialPageRoute(
-                builder: (context) {
-                  return DetallesScreen(key: null, ejer: args);
-                }
-            );
+            if (settings.name == "cambiarPass"){
+              return MaterialPageRoute(
+                  builder: (context) {
+                    return CambiarPass();
+                  }
+              );
+            }else {
+              final args = settings.arguments as Ejercicio;
+              return MaterialPageRoute(
+                  builder: (context) {
+                    return DetallesScreen(key: null, ejer: args);
+                  }
+              );
+            }
           }
         }
       }
