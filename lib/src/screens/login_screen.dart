@@ -164,8 +164,8 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
             bool primeraConex = true;
             if(snapshot.hasData){ //intentamos hacer login
               res = await bloc.submit(valueCheck);
-              primeraConex = await bloc.primeraConex();
             }
+
             if(!res){ //si algo esta mal, sacamos error
               ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
                 content: Text("Usuario y/o contraseña incorrectos"),
@@ -177,8 +177,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
                 ),
               ));
             }else{
-              print("primera conex");
-              print(primeraConex);
+              primeraConex = await bloc.primeraConex();
               if(primeraConex){
                 Navigator.pushReplacementNamed(context, "primeraConex");
               }else{

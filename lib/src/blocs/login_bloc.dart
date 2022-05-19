@@ -93,7 +93,6 @@ class LoginBloc extends Object with Validators{
     final validEmail = _email.value;
     final response = await comprobarPrimeraConex(validEmail);
     final ids = json.decode(response.body);
-    print(ids["mensaje"]);
     return ids["mensaje"];
   }
   Future<Response> comprobarPrimeraConex(String nombre) {
