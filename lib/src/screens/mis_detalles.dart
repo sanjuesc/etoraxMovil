@@ -14,7 +14,7 @@ class MisDetalles extends StatelessWidget {
           return Scaffold(
             drawer: MiDrawer(),
             appBar: AppBar(title: Text("eTorax 2.0"),),
-            body: Text('No hay info'),
+            body: Text('Cargando información'),
           );
         }else{
           Map<String, dynamic> datos = datosSnap.data!['mensaje'][0];
