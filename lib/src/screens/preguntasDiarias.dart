@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,37 +14,72 @@ class PreguntasDiarias extends StatefulWidget{
 
 }
 
+enum AppState {
+  INICIO,
+  RESPONDIDAS,
+  CARGADO
+}
+
 class PreguntasDiariasState extends State<PreguntasDiarias> {
+  AppState _state = AppState.INICIO;
+  late List<dynamic> datos;
+  bool haRespondido = false;
+  @override
+  initState(){
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    print(_state);
+    if(_state == AppState.INICIO){
+      hayPreguntas(context);
+      return Scaffold(
         drawer: MiDrawer(),
         appBar: AppBar(title: Text("eTorax 2.0"),),
-        body: FutureBuilder(
-          builder: (context, AsyncSnapshot<Map<String, dynamic>> datosSnap){
-            if(!datosSnap.hasData){
-              return CircularProgressIndicator();
-            }else{
-              bool respuesta  = datosSnap.data!['mensaje'];
-              if(!respuesta){
-                return Text("Ya has completado tus preguntas para el dia de hoy");
-              }else{
-                return Text("responder");
-              }
-            }
-          },
-          future:completar(context),
-        ),
-    );
-
-
-
-
+        body: CircularProgressIndicator(),
+      );
+    }else{
+      if(_state==AppState.CARGADO){
+        if(haRespondido){
+          return Scaffold(
+            drawer: MiDrawer(),
+            appBar: AppBar(title: Text("eTorax 2.0"),),
+            body: Text("Ya has completado tus preguntas para el dia de hoy"),
+          );
+        }else{
+          getPreguntas(context);
+          return Scaffold(
+            drawer: MiDrawer(),
+            appBar: AppBar(title: Text("eTorax 2.0"),),
+            body: CircularProgressIndicator(),
+          );
+        }
+      }else{
+        if(_state == AppState.RESPONDIDAS){
+          datos.forEach((element) {
+            Map<String, dynamic> algo = Map.from(element);
+            print(algo);
+          });
+          return Scaffold(
+              drawer: MiDrawer(),
+              appBar: AppBar(title: Text("eTorax 2.0"),),
+              body: Text("ey"),
+          );
+        }else{
+          return Scaffold(
+            drawer: MiDrawer(),
+            appBar: AppBar(title: Text("eTorax 2.0"),),
+            body: CircularProgressIndicator(),
+          );
+        }
+      }
+    }
 
   }
 
 
-  Future<Map<String, dynamic>> completar(BuildContext context) async {
+  hayPreguntas(BuildContext context) async {
     Client client = Client();
     final respuesta = await client.post(
       Uri.parse('http://'+dotenv.env['server']!+'/paciente/preguntasHoy'),
@@ -58,7 +95,32 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
     if(data['token']!=null) {
       globals.token = data['token'];
     }
-    return data;
+    print(data);
+    haRespondido = data['mensaje'];
+    setState(() {
+      _state=AppState.CARGADO;
+    });
+  }
+
+
+  getPreguntas(BuildContext context) async {
+    Client client = Client();
+    final respuesta = await client.post(
+      Uri.parse('http://'+dotenv.env['server']!+'/paciente/getPreguntas'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'access-token': globals.token,
+      },
+      body: jsonEncode(<String, String>{
+        'pacId': globals.usuario,
+      }),
+    );
+    List<dynamic> data = jsonDecode(respuesta.body);
+    datos = data;
+    setState(() {
+      _state=AppState.RESPONDIDAS;
+    });
+
   }
   
 }
