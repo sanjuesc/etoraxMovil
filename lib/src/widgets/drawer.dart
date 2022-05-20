@@ -34,7 +34,7 @@ class MiDrawer extends StatelessWidget{
           ListTile(
             title: const Text("Preguntas diarias"),
             onTap: () {
-              Navigator.pushNamed(context, "misDatos");
+              Navigator.pushNamed(context, "preguntasDiarias");
               },
           ),
           ListTile(

@@ -11,6 +11,7 @@ import 'blocs/login_provider.dart';
 import 'blocs/ejerc_provider.dart';
 import 'screens/mis_detalles.dart';
 import 'screens/faq.dart';
+import 'screens/preguntasDiarias.dart';
 import 'screens/primera_conex.dart';
 class App extends StatelessWidget{
   build(context){
@@ -79,24 +80,31 @@ class App extends StatelessWidget{
                 }
             );
           } else {
-            if (settings.name == "cambiarPass"){
+            if (settings.name == "cambiarPass") {
               return MaterialPageRoute(
                   builder: (context) {
                     return CambiarPass();
                   }
               );
-            }else {
-              final args = settings.arguments as Ejercicio;
-              return MaterialPageRoute(
-                  builder: (context) {
-                    return DetallesScreen(key: null, ejer: args);
-                  }
-              );
+            } else {
+              if (settings.name == "preguntasDiarias") {
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return PreguntasDiarias();
+                    }
+                );
+              } else {
+                final args = settings.arguments as Ejercicio;
+                return MaterialPageRoute(
+                    builder: (context) {
+                      return DetallesScreen(key: null, ejer: args);
+                    }
+                );
+              }
             }
           }
         }
       }
     }
   }
-
 }

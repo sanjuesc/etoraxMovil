@@ -1,7 +1,5 @@
-import 'dart:ui';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
-import '../widgets/drawer.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import '../globals.dart' as globals;
