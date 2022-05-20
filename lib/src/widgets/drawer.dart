@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import '../screens/menu_screen.dart';
 import '../screens/mis_detalles.dart';
+import '../screens/login_screen.dart';
 class MiDrawer extends StatelessWidget{
   Widget build(BuildContext context) {
     return Drawer(
@@ -42,6 +43,12 @@ class MiDrawer extends StatelessWidget{
               Navigator.pushNamed(context, "misDatos");
             },
           ),
+          ListTile(
+            title: const Text("Preguntas frecuentes"),
+            onTap: () {
+              Navigator.pushNamed(context, "faq");
+            },
+          ),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -49,9 +56,20 @@ class MiDrawer extends StatelessWidget{
                 height: 100,
                 color: Colors.blue,// Give height of banner
                 child: ListTile(
-                  title: const Text("Preguntas frecuentes"),
+                  title: const Text("Cerrar sesión"),
                   onTap: (){
-                    Navigator.pushNamed(context, "faq");
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                        MaterialPageRoute(
+                            builder: (context) {
+                              return Scaffold(
+                                resizeToAvoidBottomInset: false,
+                                body: LoginScreen(),
+                              );
+                            }
+                        ),
+                          (route) => false,
+                    );
                   },
                 ),
               ),
