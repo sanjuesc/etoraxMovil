@@ -57,7 +57,7 @@ class EjercBloc extends Object with Validators{
     print("$nombre $ejerId $tratId");
 
     return post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/getTEActivo'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/getTEActivo'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,

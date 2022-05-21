@@ -202,7 +202,7 @@ class _HealthAppState extends State<HealthApp> {
   Future<void> completar() async {
     Client client = Client();
     final respuesta = await client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/completarEjer'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/completarEjer'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,

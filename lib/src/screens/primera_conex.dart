@@ -97,7 +97,7 @@ class PrimeraConexState extends State<PrimeraConex>{ //hacer stateful widget htt
   completarPreguntas(){
     Client client = Client();
     client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/completarPrimeraConex'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/completarPrimeraConex'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,

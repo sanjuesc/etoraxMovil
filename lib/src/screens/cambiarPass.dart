@@ -96,7 +96,7 @@ class CambiarPassState extends State<CambiarPass>{ //hay que cambiar a statefull
           if(controllerNueva.value == controllerConfirmacion.value){
             Client client = Client();
             final respuesta = await client.post(
-              Uri.parse('http://'+dotenv.env['server']!+'/paciente/cambiarPassPac'),
+              Uri.parse('https://'+dotenv.env['server']!+'/paciente/cambiarPassPac'),
               headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
                 'access-token': globals.token,

@@ -76,7 +76,7 @@ class LoginBloc extends Object with Validators{
 
   Future<Response> intentarLogin(String nombre, String pass) {
     return post(
-      Uri.parse('http://'+dotenv.env['server']!+'/login/pacienteLogin'),
+      Uri.parse('https://'+dotenv.env['server']!+'/login/pacienteLogin'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -97,7 +97,7 @@ class LoginBloc extends Object with Validators{
   }
   Future<Response> comprobarPrimeraConex(String nombre) {
     return post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/primeraConex'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/primeraConex'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,

@@ -82,7 +82,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
   hayPreguntas(BuildContext context) async {
     Client client = Client();
     final respuesta = await client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/preguntasHoy'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/preguntasHoy'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,
@@ -106,7 +106,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
   getPreguntas(BuildContext context) async {
     Client client = Client();
     final respuesta = await client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/getPreguntas'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/getPreguntas'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,

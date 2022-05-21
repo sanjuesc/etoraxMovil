@@ -72,7 +72,7 @@ class MisDetalles extends StatelessWidget {
   Future<Map<String, dynamic>> completar(BuildContext context) async {
     Client client = Client();
     final respuesta = await client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/detalles'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/detalles'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,

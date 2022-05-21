@@ -17,7 +17,7 @@ class EtoraxAPIProvider implements Source{
     print("hola");
 
     final respuesta = await client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/getEjerciciosActuales'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/getEjerciciosActuales'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,
@@ -34,7 +34,7 @@ class EtoraxAPIProvider implements Source{
 
   Future<Ejercicio?> fetchEjercicio(int tratEjerId) async {
     final respuesta = await client.post(
-      Uri.parse('http://'+dotenv.env['server']!+'/paciente/getEjercicio'),
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/getEjercicio'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'access-token': globals.token,
