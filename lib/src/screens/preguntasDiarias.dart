@@ -64,7 +64,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
           return Scaffold(
               drawer: MiDrawer(),
               appBar: AppBar(title: Text("eTorax 2.0"),),
-              body: Text("ey"),
+              body: Text("tu aqui no ves nada pero se han recuperado las preguntas del servidor, confia en mi vale?"),
           );
         }else{
           return Scaffold(

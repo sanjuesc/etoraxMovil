@@ -1,5 +1,7 @@
 
 
+import 'package:etorax/src/screens/autostart.dart';
+
 import 'models/ejercicio.dart';
 import 'screens/menu_screen.dart';
 import 'screens/cambiarPass.dart';
@@ -94,12 +96,21 @@ class App extends StatelessWidget{
                     }
                 );
               } else {
-                final args = settings.arguments as Ejercicio;
-                return MaterialPageRoute(
-                    builder: (context) {
-                      return DetallesScreen(key: null, ejer: args);
-                    }
-                );
+                if(settings.name == "autostart"){
+                  return MaterialPageRoute(
+                      builder: (context) {
+                        return AutoStartScreen();
+                      }
+                  );
+                }else{
+                  final args = settings.arguments as Ejercicio;
+                  return MaterialPageRoute(
+                      builder: (context) {
+                        return DetallesScreen(key: null, ejer: args);
+                      }
+                  );
+                }
+
               }
             }
           }

@@ -217,7 +217,7 @@ class _HealthAppState extends State<HealthApp> {
       globals.token = data['token'];
     }
     if(data['mensaje'].toString().contains("correctamente")){
-      Navigator.popAndPushNamed(context, "menu");
+      Navigator.pushReplacementNamed(context, "menu");
     }
   }
 
@@ -244,7 +244,6 @@ class _HealthAppState extends State<HealthApp> {
         ),
       ]
     );
-
   }
 
 

@@ -83,7 +83,9 @@ class PrimeraConexState extends State<PrimeraConex>{ //hacer stateful widget htt
             ElevatedButton(
               onPressed: () {
                 completarPreguntas();
-                Navigator.pushReplacementNamed(context, "menu");
+                Navigator.pushReplacementNamed(context, "autostart");
+
+                //Navigator.pushReplacementNamed(context, "menu");
                 },
               child: Text("Enviar"),)
           ],
