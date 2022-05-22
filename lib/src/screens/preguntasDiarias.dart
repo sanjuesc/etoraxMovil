@@ -96,7 +96,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
       globals.token = data['token'];
     }
     print(data);
-    haRespondido = data['mensaje'];
+    haRespondido = data['data'];
     setState(() {
       _state=AppState.CARGADO;
     });
@@ -115,8 +115,9 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
         'pacId': globals.usuario,
       }),
     );
-    List<dynamic> data = jsonDecode(respuesta.body);
-    datos = data;
+    Map<String, dynamic> data = jsonDecode(respuesta.body);
+    List<dynamic> datosAPI = data['data'];
+    datos = datosAPI;
     setState(() {
       _state=AppState.RESPONDIDAS;
     });

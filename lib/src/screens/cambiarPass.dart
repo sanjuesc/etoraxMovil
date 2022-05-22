@@ -107,9 +107,14 @@ class CambiarPassState extends State<CambiarPass>{ //hay que cambiar a statefull
                 'nueva': controllerNueva.text
               }),
             );
+            print(respuesta.body);
             Map<String, dynamic> data = jsonDecode(respuesta.body);
             if(data['token']!=null) {
+              print(globals.token);
               globals.token = data['token'];
+              print("queva");
+              print(data['token']);
+              print(globals.token);
             }
             if(respuesta.statusCode==400){
               ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje

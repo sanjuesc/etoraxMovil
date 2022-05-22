@@ -106,9 +106,11 @@ class DetallesScreen extends StatelessWidget{
     if(response.statusCode==200){
       Map<String, dynamic> data = jsonDecode(response.body);
       if(data['token']!=null) {
+        print(data['token']);
         globals.token = data['token'];
       }
-      return data;
+      print(data);
+      return data['data'];
     }else{
       return jsonDecode(response.body);
     }
@@ -195,8 +197,10 @@ class DetallesScreen extends StatelessWidget{
     if(data['token']!=null) {
       globals.token = data['token'];
     }
+    print("completarejer");
     print("ALLEVOY");
-    if(data['mensaje'].toString().contains("correctamente")){
+    print(data);
+    if(data['data'].toString().contains("correctamente")){
       Navigator.popAndPushNamed(context, "menu");
     }
   }

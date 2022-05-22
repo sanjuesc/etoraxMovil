@@ -27,7 +27,9 @@ class EtoraxAPIProvider implements Source{
       }),
     );
     //aqui habria que gestionar que el token estuviera expirado
-    final ids = json.decode(respuesta.body);
+    final resp = json.decode(respuesta.body);
+    print(resp);
+    final ids = resp['data'];
     return ids.cast<int>();
 
   }
@@ -51,10 +53,8 @@ class EtoraxAPIProvider implements Source{
     print("ALLEVOY");
     print(data);
     final parsedJson = json.decode(respuesta.body);
-    return Ejercicio.fromJson(parsedJson);
+    return Ejercicio.fromJson(parsedJson['data']);
   }
-
-
 
 
 }

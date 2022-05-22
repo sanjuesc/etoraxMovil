@@ -17,7 +17,7 @@ class MisDetalles extends StatelessWidget {
             body: Text('Cargando información'),
           );
         }else{
-          Map<String, dynamic> datos = datosSnap.data!['mensaje'][0];
+          Map<String, dynamic> datos = datosSnap.data!;
           var fechaNac = DateTime.parse(datos['fechaNac']);
           var formatter = DateFormat('dd-MM-yyyy');
           String formatedNac = formatter.format(fechaNac);
@@ -68,9 +68,9 @@ class MisDetalles extends StatelessWidget {
   }
 
 
-
   Future<Map<String, dynamic>> completar(BuildContext context) async {
     Client client = Client();
+    print("hola");
     final respuesta = await client.post(
       Uri.parse('https://'+dotenv.env['server']!+'/paciente/detalles'),
       headers: <String, String>{
@@ -85,7 +85,7 @@ class MisDetalles extends StatelessWidget {
     if(data['token']!=null) {
       globals.token = data['token'];
     }
-    return data;
+    return data['data'][0];
   }
 
 

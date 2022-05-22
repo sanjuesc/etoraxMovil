@@ -182,6 +182,7 @@ class _HealthAppState extends State<HealthApp> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.ejerc.nombre);
     getPrefs();
     if(_state == AppState.MANUAL) {
       return Text("Manual");
@@ -192,8 +193,11 @@ class _HealthAppState extends State<HealthApp> {
       return Center(child: CircularProgressIndicator(),);
     } else if (_state == AppState.AUTH_NOT_GRANTED){
       return Center(child: CircularProgressIndicator(),);
-    } else{
+    } else if(_state == AppState.CARGANDO){
+      return Center(child: CircularProgressIndicator());
+    }else{
       return preguntar();
+
     }
 
 
