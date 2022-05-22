@@ -170,7 +170,8 @@ class DetallesScreen extends StatelessWidget{
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Flexible(child: Text("Objetivo: ${ejer.repeticiones} repeticiones de ${ejer.cantidad} ${ejer.unidad}", style: TextStyle(fontSize: 20)),),
+              SizedBox(width: 20.0,),
+              Flexible(child: Text("Objetivo: ${ejer.repeticiones} repeticiones de ${ejer.cantidad} ${ejer.unidad}", style: TextStyle(fontSize: 15)),),
             ],
           ),
         ],

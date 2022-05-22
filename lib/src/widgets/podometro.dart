@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:etorax/src/blocs/ejerc_provider.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../globals.dart' as globals;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -102,26 +103,46 @@ class _HealthAppState extends State<HealthApp> {
       }
     });
     if(widget.ejerc.completado==1){
+      double prop = distDelta/widget.ejerc.cantidad;
+      String porc = (prop*100).toStringAsFixed(2);
       return Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.check, color: Colors.green),
+              leading: Icon(Icons.pending_actions, color: Colors.green),
               title: Text(widget.ejerc.nombre),
               subtitle: Text(widget.ejerc.descri),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Flexible(child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),),
+                CircularPercentIndicator(
+                  radius: 140.0,
+                  progressColor: Colors.green,
+                  percent: 1,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  animation: true,
+                  lineWidth: 11.0,
+                  center: new Text(
+                    "100.0%",
+                    style:
+                    new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ),
               ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),
             ),
           ],
         ),
       );
     }else{
       if(distDelta>=widget.ejerc.cantidad){
+        double prop = distDelta/widget.ejerc.cantidad;
+        String porc = (prop*100).toStringAsFixed(2);
         return Card(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -132,10 +153,26 @@ class _HealthAppState extends State<HealthApp> {
                 subtitle: Text(widget.ejerc.descri),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Flexible(child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),),
-                ],
+                  CircularPercentIndicator(
+                    radius: 140.0,
+                    progressColor: Colors.green,
+                    percent: 1,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    animation: true,
+                    lineWidth: 11.0,
+                    center: new Text(
+                      "100.0%",
+                      style:
+                      new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                  ),
+                  ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),
               ),
               OutlinedButton(
                 onPressed: () {
@@ -147,6 +184,8 @@ class _HealthAppState extends State<HealthApp> {
           ),
         );
       }else{
+        double prop = distDelta/widget.ejerc.cantidad;
+        String porc = (prop*100).toStringAsFixed(2);
         return Card(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -157,10 +196,26 @@ class _HealthAppState extends State<HealthApp> {
                 subtitle: Text(widget.ejerc.descri),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Flexible(child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),),
-                ],
+                  CircularPercentIndicator(
+                    radius: 140.0,
+                    progressColor: Colors.green,
+                    percent: prop,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    animation: true,
+                    lineWidth: 11.0,
+                    center: new Text(
+                      "$porc%",
+                      style:
+                      new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                  ),
+                ]
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),
               ),
             ],
           ),
@@ -196,7 +251,7 @@ class _HealthAppState extends State<HealthApp> {
     } else if(_state == AppState.CARGANDO){
       return Center(child: CircularProgressIndicator());
     }else{
-      return preguntar();
+      return Align(child: preguntar(), alignment: Alignment.topCenter,);
 
     }
 
@@ -225,28 +280,56 @@ class _HealthAppState extends State<HealthApp> {
     }
   }
 
-  Widget preguntar() {
-    return Column(
-      children: [Text("eTorax puede detectar tu progreso automaticamente mediante el podometro de tu movil"),
-        OutlinedButton(
-          onPressed: () {
-            setManu();
-            setState(() {
-              _state=AppState.MANUAL;
-            });
-          },
-          child: Text("Manual"),
-        ),
-        OutlinedButton(
-          onPressed: () {
-            setAuto();
-            setState(() {
-              _state=AppState.AUTOMATICO;
-            });
-          },
-          child: Text("Automatica"),
-        ),
-      ]
+
+
+
+
+
+  Widget preguntar(){
+    return Card(
+      elevation: 8.0,
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      child: Container(
+          height: 150,
+          decoration: BoxDecoration(color: Colors.white60),
+          child: ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            leading: Container(
+              padding: EdgeInsets.only(right: 12.0),
+              decoration: BoxDecoration(
+                  border: Border(
+                      right: BorderSide(width: 2.0, color: Colors.grey))),
+              child: Icon(Icons.directions_walk, color: Colors.grey),
+            ),
+            title: Text("eTorax puede detectar tu progreso automaticamente mediante el podometro de tu movil"),
+            subtitle: Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Row(
+                          children: [
+                            OutlinedButton(
+                              onPressed: () {
+                                setManu();
+                                setState(() {
+                                  _state=AppState.MANUAL;
+                                });
+                              },
+                              child: Text("Manual"),
+                            ),
+                            SizedBox(width: 70.0,),
+                            OutlinedButton(
+                              onPressed: () {
+                                setAuto();
+                                setState(() {
+                                  _state=AppState.AUTOMATICO;
+                                });
+                              },
+                              child: Text("Automatica"),
+                            ),
+                          ],
+                        )
+            ),
+          )
+      ),
     );
   }
 
