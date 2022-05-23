@@ -21,6 +21,10 @@ enum AppState {
 }
 
 class PreguntasDiariasState extends State<PreguntasDiarias> {
+
+  List<String> opciones = [];
+
+
   AppState _state = AppState.INICIO;
   late List<dynamic> datos;
   bool haRespondido = false;
@@ -57,14 +61,73 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
         }
       }else{
         if(_state == AppState.RESPONDIDAS){
+          List<Map<String, dynamic>> preguntas = [];
+          List<ExpansionPanel> childs = [];
+          int i = 0;
           datos.forEach((element) {
             Map<String, dynamic> algo = Map.from(element);
-            print(algo);
+            preguntas.add(algo);
+            i++;
           });
           return Scaffold(
               drawer: MiDrawer(),
               appBar: AppBar(title: Text("eTorax 2.0"),),
-              body: Text("tu aqui no ves nada pero se han recuperado las preguntas del servidor, confia en mi vale?"),
+              body: ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  switch (preguntas[index]['tipo']){
+                    case 1:
+                      return ExpansionTile(
+                        title: Text(preguntas[index]['texto']),
+                        subtitle: Text(preguntas[index]['periodo']),
+                        children: [
+                          Text(preguntas[index]['tipo'].toString()),
+                        ],
+                      );
+                    case 2:
+                      return ExpansionTile(
+                        title: Text(preguntas[index]['texto']),
+                        subtitle: Text(preguntas[index]['periodo']),
+                        children: [
+                          Text(preguntas[index]['tipo'].toString()),
+                        ],
+                      );
+                    case 3:
+                      return ExpansionTile(
+                        title: Text(preguntas[index]['texto']),
+                        subtitle: Text(preguntas[index]['periodo']),
+                        children: [
+                          Text(preguntas[index]['tipo'].toString()),
+                        ],
+                      );
+                    case 4:
+                      return ExpansionTile(
+                        title: Text(preguntas[index]['texto']),
+                        subtitle: Text(preguntas[index]['periodo']),
+                        children: [
+                          Text(preguntas[index]['tipo'].toString()),
+                        ],
+                      );
+                    case 5:
+                      return ExpansionTile(
+                        title: Text(preguntas[index]['texto']),
+                        subtitle: Text(preguntas[index]['periodo']),
+                        children: [
+                          Text(preguntas[index]['tipo'].toString()),
+                        ],
+                      );
+                    default:
+                      return ExpansionTile(
+                        title: Text(preguntas[index]['texto']),
+                        subtitle: Text(preguntas[index]['periodo']),
+                        children: [
+                          Text(preguntas[index]['tipo'].toString()),
+                        ],
+                      );
+                  }
+                },
+                itemCount: preguntas.length,
+              ),
           );
         }else{
           return Scaffold(
@@ -95,7 +158,6 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
     if(data['token']!=null) {
       globals.token = data['token'];
     }
-    print(data);
     haRespondido = data['data'];
     setState(() {
       _state=AppState.CARGADO;
@@ -117,11 +179,43 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
     );
     Map<String, dynamic> data = jsonDecode(respuesta.body);
     List<dynamic> datosAPI = data['data'];
+    print(data);
+    if(data['token']!=null) {
+      globals.token = data['token'];
+    }
     datos = datosAPI;
     setState(() {
       _state=AppState.RESPONDIDAS;
     });
 
+  }
+
+
+  Widget tipo1(Map<String, dynamic> pregunta){
+    return Card(
+      elevation: 8.0,
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      child: Container(
+          decoration: BoxDecoration(color: Colors.white60),
+          child: ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            leading: Container(
+              padding: EdgeInsets.only(right: 12.0),
+              decoration: BoxDecoration(
+                  border: Border(
+                      right: BorderSide(width: 1.0, color: Colors.grey))),
+              child: Icon(Icons.directions_walk, color: Colors.grey),
+            ),
+            title: Text(pregunta['texto'].toString()),
+            subtitle: Row(
+              children: [
+                Text("a"),
+              ]
+            ),
+            trailing:    Icon(Icons.keyboard_arrow_right, color: Colors.grey, size: 30.0),
+          )
+      ),
+    );
   }
   
 }

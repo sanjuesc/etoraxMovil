@@ -232,7 +232,7 @@ packages:
       name: get
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.6.3"
+    version: "4.6.5"
   health:
     dependency: "direct main"
     description:
