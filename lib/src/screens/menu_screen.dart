@@ -29,7 +29,6 @@ class MenuScreen extends StatelessWidget{
         print(snapshot);
         if(!snapshot.hasData){
           return Center(
-            //child: CircularProgressIndicator(),
             child: SinEjercicios(context),
           );
         }else{
@@ -42,7 +41,6 @@ class MenuScreen extends StatelessWidget{
           ));
         }
       },
-
     );
 
   }

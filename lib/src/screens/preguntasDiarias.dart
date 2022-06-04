@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import '../globals.dart' as globals;
 import '../widgets/drawer.dart';
+import '../widgets/preguntas/tipo1.dart';
+import '../widgets/preguntas/tipo2.dart';
 class PreguntasDiarias extends StatefulWidget{
 
   State<StatefulWidget> createState() {
@@ -21,8 +23,6 @@ enum AppState {
 }
 
 class PreguntasDiariasState extends State<PreguntasDiarias> {
-
-  List<String> opciones = [];
 
 
   AppState _state = AppState.INICIO;
@@ -75,22 +75,30 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
               body: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
+                  if(index==preguntas.length){
+                    return OutlinedButton(onPressed: () {
+                      print("ey");
+                    },
+                    child: Text("Enviar respuestas"),);
+                  }
                   switch (preguntas[index]['tipo']){
                     case 1:
                       return ExpansionTile(
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Text(preguntas[index]['tipo'].toString()),
+                          Tipo1(),
                         ],
+                        maintainState: true,
                       );
                     case 2:
                       return ExpansionTile(
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Text(preguntas[index]['tipo'].toString()),
+                          Tipo2(),
                         ],
+                        maintainState: true,
                       );
                     case 3:
                       return ExpansionTile(
@@ -99,6 +107,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         children: [
                           Text(preguntas[index]['tipo'].toString()),
                         ],
+                        maintainState: true,
                       );
                     case 4:
                       return ExpansionTile(
@@ -107,6 +116,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         children: [
                           Text(preguntas[index]['tipo'].toString()),
                         ],
+                        maintainState: true,
                       );
                     case 5:
                       return ExpansionTile(
@@ -115,6 +125,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         children: [
                           Text(preguntas[index]['tipo'].toString()),
                         ],
+                        maintainState: true,
                       );
                     default:
                       return ExpansionTile(
@@ -123,10 +134,11 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         children: [
                           Text(preguntas[index]['tipo'].toString()),
                         ],
+                        maintainState: true,
                       );
                   }
                 },
-                itemCount: preguntas.length,
+                itemCount: preguntas.length+1,
               ),
           );
         }else{

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 
 class DefaultFirebaseConfig {
   static FirebaseOptions? get platformOptions {
-      log("Analytics Dart-only initializer doesn't work on Android, please make sure to add the config file.");
+      //TODO
       return null;
   }
 }

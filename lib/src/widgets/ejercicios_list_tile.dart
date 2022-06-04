@@ -45,23 +45,23 @@ class NewsListTile extends StatelessWidget{
         child: Container(
             decoration: BoxDecoration(color: Colors.white60),
             child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            leading: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              decoration: BoxDecoration(
-                  border: Border(
-                      right: BorderSide(width: 1.0, color: Colors.grey))),
-              child: Icon(Icons.directions_walk, color: Colors.grey),
-            ),
-            onTap: (){
-              Navigator.pushNamed(buildContext, 'detalles', arguments: item);
-            },
-            title: Text(item.nombre),
-            subtitle: Row(
-              children:
-                getCompletado(buildContext, item),
-            ),
-            trailing:    Icon(Icons.keyboard_arrow_right, color: Colors.grey, size: 30.0),
+              contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              leading: Container(
+                padding: EdgeInsets.only(right: 12.0),
+                decoration: BoxDecoration(
+                    border: Border(
+                        right: BorderSide(width: 1.0, color: Colors.grey))),
+                child: Icon(Icons.directions_walk, color: Colors.grey),
+              ),
+              onTap: (){
+                Navigator.pushNamed(buildContext, 'detalles', arguments: item);
+              },
+              title: Text(item.nombre),
+              subtitle: Row(
+                children:
+                  getCompletado(buildContext, item),
+              ),
+              trailing:    Icon(Icons.keyboard_arrow_right, color: Colors.grey, size: 30.0),
           )
         ),
       );

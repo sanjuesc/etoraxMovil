@@ -35,19 +35,17 @@ class _HealthAppState extends State<HealthApp> {
   AppState _state = AppState.AUTH_NOT_GRANTED;
   int _nofSteps = 10;
   double distDelta = 10.0;
+  num _tiempo = 0;
   HealthFactory health = HealthFactory();
 
   /// Fetch data points from the health plugin and show them in the app.
   Future fetchData() async {
-    // define the types to get
     final types = [
       HealthDataType.DISTANCE_DELTA,
       HealthDataType.MOVE_MINUTES,
-      // Uncomment this line on iOS - only available on iOS
-      // HealthDataType.DISTANCE_WALKING_RUNNING,
+
     ];
 
-    // with coresponsing permissions
     final permissions = [
       HealthDataAccess.READ,
       HealthDataAccess.READ,
@@ -70,13 +68,10 @@ class _HealthAppState extends State<HealthApp> {
         await health.getHealthDataFromTypes(midnight, now, types);
 
         // save all the new data points (only the first 100)
-        _healthDataList.addAll((healthData.length < 100)
-            ? healthData
-            : healthData.sublist(0, 100));
+        _healthDataList.addAll(healthData);
       } catch (error) {
         print("Exception in getHealthDataFromTypes: $error");
       }
-
       // filter out duplicates
       _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
 
@@ -96,12 +91,18 @@ class _HealthAppState extends State<HealthApp> {
 
   Widget _contentDataReady() {
     distDelta=0.0;
+    int algo=0;
     _healthDataList.forEach((element) {
+      print(element.typeString);
+      print(algo);
+      algo++;
       if(element.typeString=='DISTANCE_DELTA'){
         distDelta+=element.value;
       }else{
+        _tiempo+=element.value;
       }
     });
+    print(_tiempo);
     if(widget.ejerc.completado==1){
       double prop = distDelta/widget.ejerc.cantidad;
       String porc = (prop*100).toStringAsFixed(2);
