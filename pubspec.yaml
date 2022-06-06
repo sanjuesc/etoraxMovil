@@ -58,6 +58,7 @@ dependencies:
   auto_start_flutter: ^0.1.0
   percent_indicator: 2.1.9+1
   numberpicker: ^2.1.1
+  syncfusion_flutter_sliders: ^20.1.58
 dev_dependencies:
   flutter_test:
     sdk: flutter

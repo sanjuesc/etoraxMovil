@@ -8,6 +8,7 @@ import '../globals.dart' as globals;
 import '../widgets/drawer.dart';
 import '../widgets/preguntas/tipo1.dart';
 import '../widgets/preguntas/tipo2.dart';
+import '../widgets/preguntas/tipo3.dart';
 class PreguntasDiarias extends StatefulWidget{
 
   State<StatefulWidget> createState() {
@@ -105,7 +106,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Text(preguntas[index]['tipo'].toString()),
+                          Tipo3(),
                         ],
                         maintainState: true,
                       );
