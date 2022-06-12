@@ -10,6 +10,9 @@ import 'package:syncfusion_flutter_core/theme.dart';
 
 
 class Tipo3 extends StatefulWidget{
+  final String idPreg;
+  final String idTrat;
+  Tipo3({required this.idPreg, required this.idTrat});
 
   State<StatefulWidget> createState() {
     return Tipo3State();
@@ -20,16 +23,26 @@ class Tipo3State extends State<Tipo3>{
   double _value=0;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SfSliderTheme(
-        data: SfSliderThemeData(
-            activeLabelStyle: TextStyle(fontSize: 10.0, color: Colors.black),
-            inactiveLabelStyle:TextStyle(fontSize: 10.0, color: Colors.black),
-        ),
-        child: getSlider(),
+    return Column(
+      children: [
+        Container(
+          child: SfSliderTheme(
+            data: SfSliderThemeData(
+              activeLabelStyle: TextStyle(fontSize: 10.0, color: Colors.black),
+              inactiveLabelStyle:TextStyle(fontSize: 10.0, color: Colors.black),
+            ),
+            child: getSlider(),
 
-      ),
-      padding: EdgeInsets.fromLTRB(0.0, 40.0, 10.0, 10.0),
+          ),
+          padding: EdgeInsets.fromLTRB(0.0, 40.0, 10.0, 10.0),
+        ),
+        OutlinedButton(
+          onPressed: () {
+            print("ey");
+          },
+          child: Text("Enviar respuesta"),
+        ),
+      ]
     );
   }
 

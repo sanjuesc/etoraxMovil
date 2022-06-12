@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import '../widgets/drawer.dart';
 import '../widgets/preguntas/tipo1.dart';
 import '../widgets/preguntas/tipo2.dart';
 import '../widgets/preguntas/tipo3.dart';
+import '../widgets/preguntas/tipo4.dart';
 class PreguntasDiarias extends StatefulWidget{
 
   State<StatefulWidget> createState() {
@@ -62,11 +63,10 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
         }
       }else{
         if(_state == AppState.RESPONDIDAS){
-          List<Map<String, dynamic>> preguntas = [];
-          List<ExpansionPanel> childs = [];
+          List<Map<dynamic, dynamic>> preguntas = [];
           int i = 0;
           datos.forEach((element) {
-            Map<String, dynamic> algo = Map.from(element);
+            Map<dynamic, dynamic> algo = Map.from(element);
             preguntas.add(algo);
             i++;
           });
@@ -76,19 +76,16 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
               body: ListView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  if(index==preguntas.length){
-                    return OutlinedButton(onPressed: () {
-                      print("ey");
-                    },
-                    child: Text("Enviar respuestas"),);
-                  }
                   switch (preguntas[index]['tipo']){
                     case 1:
                       return ExpansionTile(
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Tipo1(),
+                          Tipo1(
+                              idPreg: preguntas[index]['idPreg'].toString(),
+                              idTrat: preguntas[index]['idTrat'].toString()
+                          ),
                         ],
                         maintainState: true,
                       );
@@ -97,7 +94,10 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Tipo2(),
+                          Tipo2(
+                              idPreg: preguntas[index]['idPreg'].toString(),
+                              idTrat: preguntas[index]['idTrat'].toString()
+                          ),
                         ],
                         maintainState: true,
                       );
@@ -106,7 +106,10 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Tipo3(),
+                          Tipo3(
+                              idPreg: preguntas[index]['idPreg'].toString(),
+                              idTrat: preguntas[index]['idTrat'].toString()
+                          ),
                         ],
                         maintainState: true,
                       );
@@ -115,7 +118,10 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Text(preguntas[index]['tipo'].toString()),
+                          Tipo4(
+                              idPreg: preguntas[index]['idPreg'].toString(),
+                              idTrat: preguntas[index]['idTrat'].toString()
+                          ),
                         ],
                         maintainState: true,
                       );
@@ -139,7 +145,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                       );
                   }
                 },
-                itemCount: preguntas.length+1,
+                itemCount: preguntas.length,
               ),
           );
         }else{
@@ -201,34 +207,6 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
       _state=AppState.RESPONDIDAS;
     });
 
-  }
-
-
-  Widget tipo1(Map<String, dynamic> pregunta){
-    return Card(
-      elevation: 8.0,
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      child: Container(
-          decoration: BoxDecoration(color: Colors.white60),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            leading: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              decoration: BoxDecoration(
-                  border: Border(
-                      right: BorderSide(width: 1.0, color: Colors.grey))),
-              child: Icon(Icons.directions_walk, color: Colors.grey),
-            ),
-            title: Text(pregunta['texto'].toString()),
-            subtitle: Row(
-              children: [
-                Text("a"),
-              ]
-            ),
-            trailing:    Icon(Icons.keyboard_arrow_right, color: Colors.grey, size: 30.0),
-          )
-      ),
-    );
   }
   
 }

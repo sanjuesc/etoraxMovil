@@ -7,6 +7,10 @@ import 'dart:convert';
 import '../../globals.dart' as globals;
 class Tipo2 extends StatefulWidget{
 
+  final String idPreg;
+  final String idTrat;
+  Tipo2({required this.idPreg, required this.idTrat});
+
   State<StatefulWidget> createState() {
     return Tipo2State();
   }
@@ -22,21 +26,30 @@ class Tipo2State extends State<Tipo2>{
   @override
   Widget build(BuildContext context) {
     if(resp=="No"){
-      return DropdownButton(
-        value: resp,
-        onChanged: (String? newValue) {
-          setState(() {
-            resp = newValue!;
-          });
-        },
-        items: <String>["Si", "No"]          .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),);
+      return Column(
+        children: [
+          DropdownButton(
+            value: resp,
+            onChanged: (String? newValue) {
+              setState(() {
+                resp = newValue!;
+              });
+            },
+            items: <String>["Si", "No"]          .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),),
+          OutlinedButton(
+            onPressed: () {
+              print("ey");
+            },
+            child: Text("Enviar respuesta"),
+          ),
+        ],
+      );
     }else{
-
       return Column(
         children: [DropdownButton(
           value: resp,
@@ -82,7 +95,13 @@ class Tipo2State extends State<Tipo2>{
                 )
             ),
           ],
-        )
+        ),
+          OutlinedButton(
+            onPressed: () {
+              print("ey");
+            },
+            child: Text("Enviar respuesta"),
+          ),
         ],
       );
     }
