@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import '../../globals.dart' as globals;
+import '../../resources/enviar_resp_mixin.dart';
 class Tipo1 extends StatefulWidget{
   final String idPreg;
   final String idTrat;
@@ -13,19 +14,13 @@ class Tipo1 extends StatefulWidget{
   }
 
 }
-class Tipo1State extends State<Tipo1>{
+class Tipo1State extends State<Tipo1> with Enviar{
 
   String resp = "No";
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        OutlinedButton(
-          onPressed: () {
-            print("ey");
-          },
-          child: Text("Enviar respuesta"),
-        ),
         DropdownButton(
           value: resp,
           onChanged: (String? newValue) {
@@ -38,7 +33,13 @@ class Tipo1State extends State<Tipo1>{
               value: value,
               child: Text(value),
             );
-          }).toList(),)
+          }).toList(),),
+        OutlinedButton(
+          onPressed: () {
+            enviar(resp, "", this.widget.idTrat, this.widget.idPreg);
+          },
+          child: Text("Enviar respuesta"),
+        ),
       ]
     );
   }

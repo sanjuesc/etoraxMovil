@@ -1,5 +1,6 @@
 
 
+import 'package:etorax/src/widgets/preguntas/tipo5.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -130,8 +131,10 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
                         title: Text(preguntas[index]['texto']),
                         subtitle: Text(preguntas[index]['periodo']),
                         children: [
-                          Text(preguntas[index]['tipo'].toString()),
-                        ],
+                          Tipo5(
+                              idPreg: preguntas[index]['idPreg'].toString(),
+                              idTrat: preguntas[index]['idTrat'].toString()
+                          ),                        ],
                         maintainState: true,
                       );
                     default:

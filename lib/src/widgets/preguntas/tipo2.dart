@@ -1,3 +1,4 @@
+import 'package:etorax/src/resources/enviar_resp_mixin.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class Tipo2 extends StatefulWidget{
   }
 
 }
-class Tipo2State extends State<Tipo2>{
+class Tipo2State extends State<Tipo2> with Enviar{
 
   final valorController = TextEditingController();
 
@@ -43,7 +44,7 @@ class Tipo2State extends State<Tipo2>{
             }).toList(),),
           OutlinedButton(
             onPressed: () {
-              print("ey");
+              enviar(resp,"", this.widget.idTrat, this.widget.idPreg);
             },
             child: Text("Enviar respuesta"),
           ),
@@ -67,7 +68,7 @@ class Tipo2State extends State<Tipo2>{
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Cuantos cigarrillos?"),
+            Text("Cuantos?"),
             SizedBox(
                 width: 80,
                 child: Padding(
@@ -98,7 +99,7 @@ class Tipo2State extends State<Tipo2>{
         ),
           OutlinedButton(
             onPressed: () {
-              print("ey");
+              enviar(resp,cant, this.widget.idTrat, this.widget.idPreg);
             },
             child: Text("Enviar respuesta"),
           ),

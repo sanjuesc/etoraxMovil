@@ -1,3 +1,4 @@
+import 'package:etorax/src/resources/enviar_resp_mixin.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class Tipo4 extends StatefulWidget{
   }
 
 }
-class Tipo4State extends State<Tipo4>{
+class Tipo4State extends State<Tipo4> with Enviar{
 
   final valorController = TextEditingController();
   double _value=0;
@@ -44,7 +45,7 @@ class Tipo4State extends State<Tipo4>{
             }).toList(),),
           OutlinedButton(
             onPressed: () {
-              print("${this.widget.idPreg} ${this.widget.idTrat}");
+              enviar(resp, "", this.widget.idTrat, this.widget.idPreg);
             },
             child: Text("Enviar respuesta"),
           ),
@@ -79,7 +80,7 @@ class Tipo4State extends State<Tipo4>{
           ),
           OutlinedButton(
             onPressed: () {
-              print("ey");
+              enviar(resp, _value.toString(), this.widget.idTrat, this.widget.idPreg);
             },
             child: Text("Enviar respuesta"),
           ),
@@ -132,7 +133,6 @@ class Tipo4State extends State<Tipo4>{
         setState(
               () {
             _value = newValue.round().toDouble();;
-            print(newValue.round());
           },
         );
       },
