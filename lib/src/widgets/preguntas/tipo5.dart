@@ -33,9 +33,19 @@ class Tipo5State extends State<Tipo5> with Enviar{
             ),
           ),
           OutlinedButton(
-            onPressed: () {
-              enviar(resp, "", this.widget.idTrat, this.widget.idPreg);
+            onPressed: () async {
+              int result = await obtenerOtros(resp, "", this.widget.idTrat, this.widget.idPreg);
+              if(result==200){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
+                  content: Text("La respuesta se ha guardado correctamente"),
+                ));
+              }else{
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Ha ocurrido un error al enviar la respuesta"),
+                ));
+              }
             },
+
             child: Text("Enviar respuesta"),
           ),
         ]

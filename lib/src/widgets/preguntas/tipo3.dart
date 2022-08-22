@@ -38,8 +38,17 @@ class Tipo3State extends State<Tipo3> with Enviar{
           padding: EdgeInsets.fromLTRB(0.0, 40.0, 10.0, 10.0),
         ),
         OutlinedButton(
-          onPressed: () {
-            enviar(_value.toString(), "", this.widget.idTrat, this.widget.idPreg);
+          onPressed: () async {
+            int result = await obtenerOtros(_value.toString(), "", this.widget.idTrat, this.widget.idPreg);
+            if(result==200){
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
+                content: Text("La respuesta se ha guardado correctamente"),
+              ));
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Ha ocurrido un error al enviar la respuesta"),
+              ));
+            }
           },
           child: Text("Enviar respuesta"),
         ),

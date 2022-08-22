@@ -19,8 +19,7 @@ class Tipo2 extends StatefulWidget{
 }
 class Tipo2State extends State<Tipo2> with Enviar{
 
-  final valorController = TextEditingController();
-
+  final valorController = TextEditingController(text: "1");
 
   String resp = "No";
   String cant="1";
@@ -31,6 +30,7 @@ class Tipo2State extends State<Tipo2> with Enviar{
         children: [
           DropdownButton(
             value: resp,
+
             onChanged: (String? newValue) {
               setState(() {
                 resp = newValue!;
@@ -43,8 +43,17 @@ class Tipo2State extends State<Tipo2> with Enviar{
               );
             }).toList(),),
           OutlinedButton(
-            onPressed: () {
-              enviar(resp,"", this.widget.idTrat, this.widget.idPreg);
+            onPressed: () async {
+              int result = await obtenerOtros(resp,"", this.widget.idTrat, this.widget.idPreg);
+              if(result==200){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
+                  content: Text("La respuesta se ha guardado correctamente"),
+                ));
+              }else{
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Ha ocurrido un error al enviar la respuesta"),
+                ));
+              }
             },
             child: Text("Enviar respuesta"),
           ),
@@ -82,15 +91,15 @@ class Tipo2State extends State<Tipo2> with Enviar{
                           cant=valor;
                         }else{
                           print("ALLA");
-                          cant="0";
+                          cant="1";
                         }
                         valorController.text=cant;
                       });
-                      print(cant);
                     },
                     onChanged: (String valor){
                       print(valor);
                     },
+
                   ),
                   padding: EdgeInsets.only(left: 30.0),
                 )
@@ -98,16 +107,23 @@ class Tipo2State extends State<Tipo2> with Enviar{
           ],
         ),
           OutlinedButton(
-            onPressed: () {
-              enviar(resp,cant, this.widget.idTrat, this.widget.idPreg);
+            onPressed: () async {
+              int result = await obtenerOtros(resp,cant, this.widget.idTrat, this.widget.idPreg);
+              if(result==200){
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar( //usamos el scaffold de app.dart para mostrar el mensaje
+                  content: Text("La respuesta se ha guardado correctamente"),
+                ));
+              }else{
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("Ha ocurrido un error al enviar la respuesta"),
+                ));
+              }
             },
             child: Text("Enviar respuesta"),
           ),
         ],
       );
     }
-
-
 
   }
   //hace
