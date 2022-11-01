@@ -49,6 +49,12 @@ class MiDrawer extends StatelessWidget{
               Navigator.pushNamed(context, "faq");
             },
           ),
+          ListTile(
+            title: const Text("Videos generales"),
+            onTap: () {
+              Navigator.pushNamed(context, "videosGenerales");
+            },
+          ),
           Expanded(
             child: Align(
               alignment: Alignment.bottomCenter,

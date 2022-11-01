@@ -177,6 +177,7 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
                 ),
               ));
             }else{
+              bloc.obtenerGenerales();
               primeraConex = await bloc.primeraConex();
               if(primeraConex){
                 Navigator.pushReplacementNamed(context, "primeraConex");

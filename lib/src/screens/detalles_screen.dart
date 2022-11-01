@@ -76,28 +76,59 @@ class DetallesScreen extends StatelessWidget{
     );
   }
 
-  videoWidget(String vidId) {
-    YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: vidId,
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-        loop: true,
-      ),
-    );
+  videoWidget(vidId) {
 
-    return YoutubePlayer(
-      controller: _controller,
-      bottomActions: [CurrentPosition(),
-      ProgressBar(isExpanded: true,),],
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.amber,
-      onReady: () {
-        _controller.addListener(() {
-
-        },);
-        },
-    );
+    if(vidId.runtimeType == String){
+      YoutubePlayerController _controller = YoutubePlayerController(
+        initialVideoId: vidId,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+          loop: true,
+        ),
+      );
+      return
+        Container(
+            child:  YoutubePlayer(
+              controller: _controller,
+              bottomActions: [CurrentPosition(),
+                ProgressBar(isExpanded: true,),],
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.amber,
+              onReady: () {
+                _controller.addListener(() {
+                },);
+              },
+            )
+        );
+    }else{
+      YoutubePlayerController _controller = YoutubePlayerController(
+        initialVideoId: vidId.first,
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+          loop: true,
+        ),
+      );
+      return
+        Container(
+            child:  YoutubePlayer(
+              controller: _controller,
+              bottomActions: [CurrentPosition(),
+                ProgressBar(isExpanded: true,),],
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.amber,
+              onReady: () {
+                _controller.addListener(() {
+                },);
+              },
+              onEnded: (data){
+                _controller
+                    .load(vidId[(vidId.indexOf(data.videoId) + 1) % vidId.length]);
+              },
+            )
+        );
+    }
   }
 
 

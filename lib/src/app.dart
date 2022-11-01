@@ -1,6 +1,7 @@
 
 
 import 'package:etorax/src/screens/autostart.dart';
+import 'package:etorax/src/screens/videos_generales.dart';
 
 import 'models/ejercicio.dart';
 import 'screens/menu_screen.dart';
@@ -100,6 +101,12 @@ class App extends StatelessWidget{
                   return MaterialPageRoute(
                       builder: (context) {
                         return AutoStartScreen();
+                      }
+                  );
+                }else if (settings.name == "videosGenerales"){
+                  return MaterialPageRoute(
+                      builder: (context) {
+                        return VideosGenerales();
                       }
                   );
                 }else{

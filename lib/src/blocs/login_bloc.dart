@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBloc extends Object with Validators{
 
-
+  late List<dynamic> videosGenerales;
   final _email = BehaviorSubject<String>();
   final _password = BehaviorSubject<String>();
 
@@ -108,6 +108,23 @@ class LoginBloc extends Object with Validators{
     );
   }
 
-
+  obtenerGenerales() async{
+    final response = await obtenerGeneralesServer();
+    print("##############################");
+    final ids = json.decode(response.body);
+    videosGenerales= ids["data"];
+  }
+  Future<Response> obtenerGeneralesServer() {
+    return post(
+      Uri.parse('https://'+dotenv.env['server']!+'/paciente/obtenerGenerales'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'access-token': globals.token,
+      },
+      body: jsonEncode(<String, String>{
+        'pacId': globals.usuario
+      }),
+    );
+  }
 
 }
