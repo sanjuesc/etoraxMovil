@@ -32,12 +32,12 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
               emailField(bloc),
               passwordField(bloc),
               Container(margin: EdgeInsets.only(top: 20.0),),
-              recordarDatos(),
+              //recordarDatos(),
               Container(margin: EdgeInsets.only(top: 20.0),),
               checkBox(),
               submitButton(bloc),
               Expanded(child:Container()),//pongo esto aqui para rellenar el espacio hasta el Text
-              faq()
+              //faq()
             ],
           ),
         )
@@ -196,12 +196,14 @@ class LoginScreenState extends State<LoginScreen>{ //hay que cambiar a statefull
   Widget recordarDatos() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children:   [InkWell(
+      children:   [
+        InkWell(
           child: Text('No recuerdo mis datos'),
           onTap: () {
             print("DATOS");
           }
-      ),],
+        ),
+      ],
     );
   }
 

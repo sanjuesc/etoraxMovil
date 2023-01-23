@@ -12,6 +12,10 @@ class MiDrawer extends StatelessWidget{
     return Drawer(
       child: Column(
         children: [
+          SizedBox(
+            height: 35,
+            child: Container(color: Colors.blue),
+          ),
           const SizedBox(
             height: 120,
             child: DrawerHeader(
