@@ -55,6 +55,8 @@ android {
 
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
+    //fix para evitar crashes en Android 12 API 31
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 }
 
 flutter {
