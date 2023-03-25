@@ -48,7 +48,7 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
       );
     }else{
       if(_state==AppState.CARGADO){
-        if(haRespondido){
+        if(!haRespondido){
           return Scaffold(
             drawer: MiDrawer(),
             appBar: AppBar(title: Text("eTorax 2.0"),),
@@ -201,7 +201,6 @@ class PreguntasDiariasState extends State<PreguntasDiarias> {
     );
     Map<String, dynamic> data = jsonDecode(respuesta.body);
     List<dynamic> datosAPI = data['data'];
-    print(data);
     if(data['token']!=null) {
       globals.token = data['token'];
     }

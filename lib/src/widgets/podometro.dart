@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:etorax/src/blocs/ejerc_provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import '../globals.dart' as globals;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -14,10 +15,11 @@ import 'package:health/health.dart';
 
 class HealthApp extends StatefulWidget {
   final Ejercicio ejerc;
+  final PanelController pc;
   @override
   _HealthAppState createState() => _HealthAppState();
 
-  const HealthApp({ Key? key, required this.ejerc }): super(key: key);
+  const HealthApp({ Key? key, required this.ejerc, required this.pc }): super(key: key);
 
 
 }
@@ -137,6 +139,23 @@ class _HealthAppState extends State<HealthApp> {
               padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),
             ),
+            ButtonBar(
+              alignment: MainAxisAlignment.start,
+              children: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20, color: Color(0xFF6200EE)),
+                  ),
+                  onPressed: () {
+                    widget.pc.isAttached ? widget.pc.open() : print("no estaba");
+                  },
+                  child: const Text("Ver video"),
+                ),
+              ],
+            ),
+
+
+
           ],
         ),
       );
@@ -179,7 +198,7 @@ class _HealthAppState extends State<HealthApp> {
                 onPressed: () {
                   completar();
                 },
-                child: Text("He finalizado  ✔"),
+                child: Text("Finalizar ejercicio"),
               ),
             ],
           ),
@@ -217,6 +236,33 @@ class _HealthAppState extends State<HealthApp> {
               Padding(
                 padding: EdgeInsets.only(top: 20.0),
                 child: Text("${distDelta.toStringAsFixed(2)} metros de los ${widget.ejerc.cantidad} metros diarios", style: TextStyle(fontSize: 15)),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(16.0, 20.0, 0.0, 0.0),
+                child: Text("Si la distancia no se actualiza correctamente, puedes completar el ejercicio mediante el botón de abajo", style: TextStyle(fontSize: 15)),
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 20, color: Color(0xFF6200EE)),
+                    ),
+                    onPressed: () {
+                      completar();
+                    },
+                    child: const Text("Completar manualmente"),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 20, color: Color(0xFF6200EE)),
+                    ),
+                    onPressed: () {
+                      widget.pc.isAttached ? widget.pc.open() : print("no estaba");
+                    },
+                    child: const Text("Ver video"),
+                  ),
+                ],
               ),
             ],
           ),
@@ -261,6 +307,7 @@ class _HealthAppState extends State<HealthApp> {
 
   Future<void> completar() async {
     Client client = Client();
+    print("COMPLETAR #############################");
     final respuesta = await client.post(
       Uri.parse('https://'+dotenv.env['server']!+'/paciente/completarEjer'),
       headers: <String, String>{
@@ -273,10 +320,12 @@ class _HealthAppState extends State<HealthApp> {
       }),
     );
     Map<String, dynamic> data = jsonDecode(respuesta.body);
+    print("QUE VIENE");
+    print(data);
     if(data['token']!=null) {
       globals.token = data['token'];
     }
-    if(data['mensaje'].toString().contains("correctamente")){
+    if(data.toString().contains("correctamente")){
       Navigator.pushReplacementNamed(context, "menu");
     }
   }
